@@ -5,7 +5,7 @@
 #' By default, the function uses stratified splitting. This will balance the partitions as good as possible regarding the distribution of the input vector \code{y}. Numeric input is first binned into \code{n_bins} quantile groups. If \code{type = "grouped"}, groups specified by \code{y} are kept together when splitting. This is relevant for clustered or panel data.
 #' @importFrom stats ave quantile
 #' @param y Either the variable used for "stratification" or "grouped" splits. For "basic" splits, any vector of the same length as the data intended to split.
-#' @param p A vector with split probabilities, e.g. c(train = 0.7, valid = 0.3). Names are passed to the output.
+#' @param p A vector with split probabilities per partition, e.g. c(train = 0.7, valid = 0.3). Names are passed to the output.
 #' @param type Split type. One of "stratified", "basic", "grouped". The default is "stratified".
 #' @param n_bins Approximate numbers of bins for numeric \code{y} and \code{type = "stratified"}.
 #' @param split_into_list Should the resulting partition vector be split into a list or not? Default is\code{TRUE}.
@@ -43,6 +43,9 @@ partition <- function(y, p, type = c("stratified", "basic", "grouped"), n_bins =
     if (is.numeric(y) && length(unique(y)) > n_bins) {
       y <- .bin(y, n_bins)
     }
+    if (anyNA(y)) {
+      y <- factor(y, exclude = NULL)
+    }
     out <- ave(integer(n), y, FUN = function(z) .smp_fun(length(z), p))
   } else if (type == "grouped") {
     y_unique <- unique(y)
@@ -59,15 +62,11 @@ partition <- function(y, p, type = c("stratified", "basic", "grouped"), n_bins =
   if (split_into_list) split(seq_along(y), out) else out
 }
 
-# Little helper(s)
+# Little helpers
 .bin <- function(y, n_bins) {
-  qu <- unique(quantile(y, seq(0, 1, length.out = n_bins)))
-  findInterval(y, qu, rightmost.closed = TRUE)
+  qu <- quantile(y, seq(0, 1, length.out = n_bins + 1), na.rm = TRUE)
+  findInterval(y, unique(qu), rightmost.closed = TRUE)
 }
-
-# .smp_fun <- function(z, p) {
-#   sample(seq_along(p), length(z), replace = TRUE, prob = p)
-# }
 
 .smp_fun <- function(n, p) {
   sample(rep.int(seq_along(p), times = ceiling(p * n)), n)
