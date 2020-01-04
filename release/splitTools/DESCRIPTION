@@ -2,18 +2,20 @@ Type: Package
 Package: splitTools
 Title: Tools for Data Splitting
 Version: 0.1.0
-Date: 2020-01-03
+Date: 2020-01-04
 Authors@R: 
     person(given = "Michael",
            family = "Mayer",
            role = c("aut", "cre", "cph"),
            email = "mayermichael79@gmail.com")
 Maintainer: Michael Mayer <mayermichael79@gmail.com>
-Description: Fast, light-weight tool box for data splitting.
-    Data sets can be split into disjoint groups (e.g.
-    training/validation/test) or into (repeated) k-folds for subsequent
+Description: Fast, lightweight toolkit for data splitting. Data
+    sets can be partitioned into disjoint groups (e.g. into training,
+    validation, and test) or into (repeated) k-folds for subsequent
     cross-validation. Besides basic splits, the package supports
-    stratified as well as grouped splits.
+    stratified as well as grouped splitting. See e.g. Hastie et al. (2001)
+    <doi.org/10.1007/978-0-387-84858-7> for the basic background on data
+    partitioning and cross-validation.
 License: GPL(>= 2)
 URL: https://github.com/mayer79/splitTools
 BugReports: https://github.com/mayer79/splitTools/issues

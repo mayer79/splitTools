@@ -1,38 +1,61 @@
 #' Creates Folds
 #'
-#' This function provides a list of row numbers per fold of k-fold cross-validation (basic, stratified, or grouped). Repeated fold creation is supported as well.
-#' @param y Either the variable used for stratification or grouping.
+#' This function provides a list of row indices per fold of k-fold cross-validation (basic, stratified, or grouped). Repeated fold creation is supported as well.
+#'
+#' By default, the function uses stratified splitting. This will balance the folds regarding the distribution of the input vector \code{y}. Numeric input is first binned into \code{n_bins} quantile groups. If \code{type = "grouped"}, groups specified by \code{y} are kept together when splitting. This is relevant for clustered or panel data.
+#' @param y Either the variable used for "stratification" or "grouped" splits. For "basic" splits, any vector of the same length as the data intended to split.
 #' @param k Number of folds.
-#' @param type Split type. One of "stratified", "basic", "grouped".
-#' @param m_repetitions How many times should the data be split into k folds? Default is 1, i.e. no repeated folds.
-#' @param names Should folds be named?
-#' @param return_out Set to \code{TRUE} if the row numbers not in the fold are to be returned. Defaults to \code{FALSE}.
+#' @param type Split type. One of "stratified", "basic", "grouped". The default is "stratified".
+#' @param n_bins Approximate numbers of bins for numeric \code{y} and \code{type = "stratified"}.
+#' @param m_rep How many times should the data be split into k folds? Default is 1, i.e. no repetitions.
+#' @param use_names Should folds be named? Default is \code{TRUE}.
+#' @param invert Set to \code{TRUE} if the row numbers not in the fold are to be returned. Defaults to \code{FALSE}.
 #' @param seed Integer random seed.
-#' @return A list with row numbers per fold.
+#' @return A list with row indices per fold.
 #' @export
 #' @examples
 #' y <- rep(c(letters[1:4]), each = 5)
 #' create_folds(y)
 #' create_folds(y, k = 2)
-#' create_folds(y, k = 2, m_repetitions = 2)
-create_folds <- function(y, k = 5, type = c("stratified", "basic", "grouped"), 
-                         m_repetitions = 1, names = TRUE, 
-                         return_out = FALSE, seed = NULL) {
+#' create_folds(y, k = 2, m_rep = 2)
+create_folds <- function(y, k = 5, type = c("stratified", "basic", "grouped"),
+                         n_bins = 10, m_rep = 1, use_names = TRUE,
+                         invert = FALSE, seed = NULL) {
+  # Input checks
   type <- match.arg(type)
+  stopifnot(is.atomic(y), length(y) >= 2L,
+            k >= 2,
+            m_rep >= 1)
+
+  # Initializations
   if (!is.null(seed)) {
     set.seed(seed)
   }
-  f <- function() make_split(y = y, p = rep(1 / k, times = k), 
-                             type = type, invert = !return_out)
-  if (m_repetitions == 1) {
-    out <- unname(f())
-  } else {
-    out <- unlist(replicate(m_repetitions, f(), simplify = FALSE), 
-                  recursive = FALSE, use.names = FALSE)
+  p <- rep(1 / k, times = k)
+  if (use_names) {
+    sfx <- .names("Rep", seq_len(m_rep))
   }
-  if (names) {
-    names(out) <- paste0("Fold", gsub(" ", "0", format(seq_along(out))))
+  f <- function(i = 1) {
+    res <- partition(y = y, p = p, type = type, n_bins = n_bins,
+                     split_into_list = TRUE, use_names = FALSE)
+    res <- if (invert) res else lapply(res, function(z) seq_along(y)[-z])
+    if (use_names) {
+      names(res) <- .names("Fold", seq_along(res))
+      if (m_rep > 1) {
+        names(res) <- paste(names(res), sfx[i], sep = ".")
+      }
+    } else {
+      res <- unname(res)
+    }
+    res
   }
-  out
+
+  # Call partition once or multiple times
+  if (m_rep == 1) f() else unlist(lapply(seq_len(m_rep), f), recursive = FALSE)
+}
+
+# Little helper(s)
+.names <- function(prefix, suffix) {
+  paste0(prefix, gsub(" ", "0", format(suffix)))
 }
 

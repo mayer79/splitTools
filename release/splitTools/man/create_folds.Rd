@@ -8,36 +8,42 @@ create_folds(
   y,
   k = 5,
   type = c("stratified", "basic", "grouped"),
-  m_repetitions = 1,
-  names = TRUE,
-  return_out = FALSE,
+  n_bins = 10,
+  m_rep = 1,
+  use_names = TRUE,
+  invert = FALSE,
   seed = NULL
 )
 }
 \arguments{
-\item{y}{Either the variable used for stratification or grouping.}
+\item{y}{Either the variable used for "stratification" or "grouped" splits. For "basic" splits, any vector of the same length as the data intended to split.}
 
 \item{k}{Number of folds.}
 
-\item{type}{Split type. One of "stratified", "basic", "grouped".}
+\item{type}{Split type. One of "stratified", "basic", "grouped". The default is "stratified".}
 
-\item{m_repetitions}{How many times should the data be split into k folds? Default is 1, i.e. no repeated folds.}
+\item{n_bins}{Approximate numbers of bins for numeric \code{y} and \code{type = "stratified"}.}
 
-\item{names}{Should folds be named?}
+\item{m_rep}{How many times should the data be split into k folds? Default is 1, i.e. no repetitions.}
 
-\item{return_out}{Set to \code{TRUE} if the row numbers not in the fold are to be returned. Defaults to \code{FALSE}.}
+\item{use_names}{Should folds be named? Default is \code{TRUE}.}
+
+\item{invert}{Set to \code{TRUE} if the row numbers not in the fold are to be returned. Defaults to \code{FALSE}.}
 
 \item{seed}{Integer random seed.}
 }
 \value{
-A list with row numbers per fold.
+A list with row indices per fold.
 }
 \description{
-This function provides a list of row numbers per fold of k-fold cross-validation (basic, stratified, or grouped). Repeated fold creation is supported as well.
+This function provides a list of row indices per fold of k-fold cross-validation (basic, stratified, or grouped). Repeated fold creation is supported as well.
+}
+\details{
+By default, the function uses stratified splitting. This will balance the folds regarding the distribution of the input vector \code{y}. Numeric input is first binned into \code{n_bins} quantile groups. If \code{type = "grouped"}, groups specified by \code{y} are kept together when splitting. This is relevant for clustered or panel data.
 }
 \examples{
 y <- rep(c(letters[1:4]), each = 5)
 create_folds(y)
 create_folds(y, k = 2)
-create_folds(y, k = 2, m_repetitions = 2)
+create_folds(y, k = 2, m_rep = 2)
 }
