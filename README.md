@@ -1,6 +1,6 @@
 # splitTools
 
-`splitTools` is a fast, light-weight tool box for data splitting. Data sets can be split into disjoint groups (e.g. for training/validation/test) or into (repeated) k-folds for subsequent cross-validation. Besides basic splits, the package supports stratified as well as grouped splits.
+`splitTools` is a fast, lightweight toolkit for data splitting. Data sets can be split into disjoint groups (e.g. into training/validation/test) or into (repeated) k-folds for subsequent cross-validation. Besides basic splits, the package supports stratified as well as grouped splits.
 
 ## Installation
 From CRAN:
@@ -20,14 +20,14 @@ install_github("mayer79/splitTools")
 library(splitTools)
 set.seed(3)
 
-# Train/valid/test indices for iris data stratified by Sepal.Length
-inds <- make_split(iris$Sepal.Length, p = c(train = 0.5, valid = 0.25, test = 0.25))
+# Train/valid/test indices for iris data stratified by Species
+inds <- partition(iris$Species, p = c(train = 0.5, valid = 0.25, test = 0.25))
 
-# Indices for 5-fold cross-validation stratified by Sepal.Length
-inds <- create_folds(iris$Sepal.Length, k = 5)
+# Indices for 5-fold cross-validation stratified by Species
+inds <- create_folds(iris$Species, k = 5)
 
-# Indices for 3 times repeated 5-fold cross-validation stratified by Sepal.Length
-inds <- create_folds(iris$Sepal.Length, k = 5, m_repetitions = 3)
+# Indices for 3 times repeated 5-fold cross-validation stratified by Species
+inds <- create_folds(iris$Species, k = 5, m_repetitions = 3)
 
 ```
 

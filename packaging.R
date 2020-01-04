@@ -20,7 +20,7 @@ create_package(
     Type = "Package",
     Version = "0.1.0",
     Date = Sys.Date(),
-    Description = "Fast, light-weight tool box for data splitting. Data sets can be split into disjoint groups (e.g. training/validation/test) or into (repeated) k-folds for subsequent cross-validation. Besides basic splits, the package supports stratified as well as grouped splits.",
+    Description = "Fast, lightweight toolkit for data splitting. Data sets can be split into disjoint groups (e.g. training/validation/test) or into (repeated) k-folds for subsequent cross-validation. Besides basic splits, the package supports stratified as well as grouped splits.",
     `Authors@R` = "person('Michael', 'Mayer', email = 'mayermichael79@gmail.com', role = c('aut', 'cre', 'cph'))",
     URL = "https://github.com/mayer79/splitTools",
     BugReports = "https://github.com/mayer79/splitTools/issues",
