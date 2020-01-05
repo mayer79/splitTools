@@ -31,6 +31,7 @@ create_package(
 file.copy(file.path(pkg, "DESCRIPTION"), to = getwd(), overwrite = TRUE)
 # Use package has no option to look for pkg, so we first copy description from pkg, modify it and move back
 use_package("stats", "Imports")
+# use_rcpp(pkg)
 
 # Set up other files -------------------------------------------------
 # use_readme_md()

@@ -28,7 +28,7 @@ create_folds(
 
 \item{use_names}{Should folds be named? Default is \code{TRUE}.}
 
-\item{invert}{Set to \code{TRUE} if the row numbers not in the fold are to be returned. Defaults to \code{FALSE}.}
+\item{invert}{Set to \code{TRUE} if the row numbers not in the fold are to be returned. Default is \code{FALSE}.}
 
 \item{seed}{Integer random seed.}
 }

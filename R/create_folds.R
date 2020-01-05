@@ -9,7 +9,7 @@
 #' @param n_bins Approximate numbers of bins for numeric \code{y} and \code{type = "stratified"}.
 #' @param m_rep How many times should the data be split into k folds? Default is 1, i.e. no repetitions.
 #' @param use_names Should folds be named? Default is \code{TRUE}.
-#' @param invert Set to \code{TRUE} if the row numbers not in the fold are to be returned. Defaults to \code{FALSE}.
+#' @param invert Set to \code{TRUE} if the row numbers not in the fold are to be returned. Default is \code{FALSE}.
 #' @param seed Integer random seed.
 #' @return A list with row indices per fold.
 #' @export
