@@ -62,12 +62,24 @@ partition <- function(y, p, type = c("stratified", "basic", "grouped"), n_bins =
   if (split_into_list) split(seq_along(y), out) else out
 }
 
-# Little helpers
+# Little helper(s)
 .bin <- function(y, n_bins) {
   qu <- quantile(y, seq(0, 1, length.out = n_bins + 1), na.rm = TRUE)
   findInterval(y, unique(qu), rightmost.closed = TRUE)
 }
 
+# Guarantees that no partition is empty
 .smp_fun <- function(n, p) {
-  sample(rep.int(seq_along(p), times = ceiling(p * n)), n)
+  pn <- trunc(p * n)
+  v <- seq_along(p)
+  if (n_left_over <- n - sum(pn)) {
+    left_over <- v[order(p)[seq_len(n_left_over)]]
+    return(sample(c(rep.int(v, times = pn), left_over)))
+  }
+  sample(rep.int(v, times = pn))
 }
+# .smp_fun2 <- function(n, p) {
+#   sample(rep.int(seq_along(p), times = ceiling(p * n)), n)
+# }
+
+

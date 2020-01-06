@@ -121,39 +121,7 @@ library(profr)
 y <- rexp(1e7)
 system.time(out <- create_folds(y, k = 5, type = "basic"))
 lapply(out, length)
-system.time(out <- create_folds(y, k = 5, approx = TRUE, type = "basic"))
-lapply(out, length)
 
 y <- rexp(1e7)
 system.time(out <- partition(y, p = c(train = 0.7, test = 0.3), type = "basic"))
 lapply(out, length)
-system.time(out <- partition(y, p = c(train = 0.7, test = 0.3), type = "basic", approx = TRUE))
-lapply(out, length)
-
-
-library(Rcpp)
-sourceCpp("src/C_fast_shuffle.cpp")
-
-set.seed(3)
-library(microbenchmark)
-x <- runif(1e7)
-microbenchmark(C_fast_shuffle(x), sample(x), times = 3)
-
-shuffle <- functi
-p <- rep(1/10, 10)
-n <- 1e7
-system.time(rep.int(seq_along(p), times = ceiling(p * n)))
-system.time(sample(rep.int(seq_along(p), times = ceiling(p * n)))[seq_len(n)])
-system.time(C_shuffle(rep.int(seq_along(p), times = ceiling(p * n)))[seq_len(n)])
-
-.smp_fun <- function(n, p) {
-  sample(rep.int(seq_along(p), times = ceiling(p * n)), n)
-}
-.smp_fun2 <- function(n, p) {
-  fast_shuffle(rep.int(seq_along(p), times = ceiling(p * n)), n)
-}
-p <- c(0.8, 0.2)
-n <- 1e7
-.smp_fun(n, p)
-.smp_fun2(n, p)
-microbenchmark(.smp_fun(n, p), .smp_fun2(n, p), times = 1)
