@@ -137,7 +137,7 @@ sourceCpp("src/C_fast_shuffle.cpp")
 set.seed(3)
 library(microbenchmark)
 x <- runif(1e7)
-microbenchmark(C_fast_shuffle(x), sample(x), times = 3)
+microbenchmark(fast_shuffle(x), sample(x), times = 3)
 
 shuffle <- functi
 p <- rep(1/10, 10)
@@ -157,3 +157,16 @@ n <- 1e7
 .smp_fun(n, p)
 .smp_fun2(n, p)
 microbenchmark(.smp_fun(n, p), .smp_fun2(n, p), times = 1)
+
+
+ave2 <- function(x, g, p) {
+  g <- factor(g, exclude = NULL)
+  split(x, g) <- lapply(split(x, g), function(z) .smp_fun(length(z), p))
+  x
+}
+x <- sample(LETTERS, 1e6, T)
+g <- sample(1:2, 1e7, T)
+p <- c(0.7, 0.3)
+microbenchmark(ave(x, g, FUN = function(z) .smp_fun(length(z), p)),
+               ave2(x, g, p), times = 1)
+microbenchmark(partition(g, p), times = 3)
