@@ -23,10 +23,12 @@ p <- c(0.6, 0.2, 0.2)
 (out <- partition(y, p, split_into_list = F))
 (out <- partition(y, p, type = "grouped", split_into_list = F))
 (out <- partition(y, p, type = "basic", split_into_list = F))
+(out <- partition(y, p, type = "blocked", split_into_list = F))
 
 (out <- partition(y, p, split_into_list = F, use_names = F))
 (out <- partition(y, p, type = "grouped", split_into_list = F, use_names = F))
 (out <- partition(y, p, type = "basic", split_into_list = F, use_names = F))
+(out <- partition(y, p, type = "blocked", split_into_list = F, use_names = F))
 
 
 (out <- partition(y, p = p))
@@ -66,12 +68,16 @@ sum(sapply(out, length))
 sum(sapply(out, length))
 (out <- create_folds(y, k = 3, type = "basic"))
 sum(sapply(out, length))
+(out <- create_folds(y, k = 3, type = "blocked"))
+sum(sapply(out, length))
 
 out <- create_folds(y, k = 3, invert = T)
 sum(sapply(out, length))
 out <- create_folds(y, k = 3, type = "grouped", invert = T)
 sum(sapply(out, length))
 out <- create_folds(y, k = 3, type = "basic", invert = T)
+sum(sapply(out, length))
+out <- create_folds(y, k = 3, type = "blocked", invert = T)
 sum(sapply(out, length))
 
 (out <- create_folds(y, k = 3, use_names = F))
@@ -92,6 +98,8 @@ y <- rexp(1e6)
 sum(sapply(create_folds(y, k = 10, invert = T), length))
 sum(sapply(create_folds(y, k = 10, invert = T, type = "basic"), length))
 sum(sapply(create_folds(y, k = 10, invert = T, type = "grouped"), length))
+sum(sapply(create_folds(y, k = 10, invert = T, type = "blocked"), length))
+
 
 system.time(out <- create_folds(y, k = 10))
 sd(sapply(out, function(z) mean(y[z], na.rm = T)))
