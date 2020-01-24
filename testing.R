@@ -138,43 +138,12 @@ lapply(out, length)
 system.time(out <- partition(y, p = c(train = 0.7, test = 0.3), type = "basic", approx = TRUE))
 lapply(out, length)
 
+# CREATE_TIMEFOLDS
+y <- runif(100)
+# y <- c(NA, NA, y)
+# y <- factor(y)
+(out <- create_timefolds(y, k = 3))
+
 
 library(Rcpp)
 sourceCpp("src/C_fast_shuffle.cpp")
-
-set.seed(3)
-library(microbenchmark)
-x <- runif(1e7)
-microbenchmark(fast_shuffle(x), sample(x), times = 3)
-
-shuffle <- functi
-p <- rep(1/10, 10)
-n <- 1e7
-system.time(rep.int(seq_along(p), times = ceiling(p * n)))
-system.time(sample(rep.int(seq_along(p), times = ceiling(p * n)))[seq_len(n)])
-system.time(C_shuffle(rep.int(seq_along(p), times = ceiling(p * n)))[seq_len(n)])
-
-.smp_fun <- function(n, p) {
-  sample(rep.int(seq_along(p), times = ceiling(p * n)), n)
-}
-.smp_fun2 <- function(n, p) {
-  fast_shuffle(rep.int(seq_along(p), times = ceiling(p * n)), n)
-}
-p <- c(0.8, 0.2)
-n <- 1e7
-.smp_fun(n, p)
-.smp_fun2(n, p)
-microbenchmark(.smp_fun(n, p), .smp_fun2(n, p), times = 1)
-
-
-ave2 <- function(x, g, p) {
-  g <- factor(g, exclude = NULL)
-  split(x, g) <- lapply(split(x, g), function(z) .smp_fun(length(z), p))
-  x
-}
-x <- sample(LETTERS, 1e6, T)
-g <- sample(1:2, 1e7, T)
-p <- c(0.7, 0.3)
-microbenchmark(ave(x, g, FUN = function(z) .smp_fun(length(z), p)),
-               ave2(x, g, p), times = 1)
-microbenchmark(partition(g, p), times = 3)

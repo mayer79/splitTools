@@ -38,7 +38,7 @@ create_folds <- function(y, k = 5,
     set.seed(seed)
   }
   p <- rep(1 / k, times = k)
-  if (use_names) {
+  if (use_names && m_rep > 1) {
     sfx <- .names("Rep", seq_len(m_rep))
   }
   f <- function(i = 1) {
