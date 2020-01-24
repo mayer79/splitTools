@@ -10,9 +10,11 @@ Its two main functions `partition` and `create_folds` support
 
 - creating *repeated* folds for cross-validation,
 
-- stratified splitting (e.g. for stratified cross-validation), as well as
+- stratified splitting (e.g. for stratified cross-validation), 
 
-- grouped splitting (e.g. for group-k-fold cross-validation).
+- grouped splitting (e.g. for group-k-fold cross-validation) as well as
+
+- blocked splitting (if the sequential order of the data should be retained).
 
 ## Installation
 
