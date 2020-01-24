@@ -36,7 +36,7 @@
 
 
 <meta property="og:title" content="Split Data into Partitions — partition" />
-<meta property="og:description" content="This function provides row indices for data splitting, e.g. into training, validation, and test. Different types of split strategies are supported (&quot;basic&quot;, &quot;stratified&quot; (the default), or &quot;grouped&quot;), see Details. The partition indices are either returned as a list with one element per partition (the default) or as vector of partition ids." />
+<meta property="og:description" content="This function provides row indices for data splitting, e.g. into training, validation, and test. Different types of split strategies are supported (&quot;basic&quot;, &quot;stratified&quot; (the default), &quot;grouped&quot;, or &quot;blocked&quot;), see Details. The partition indices are either returned as a list with one element per partition (the default) or as vector of partition ids." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">splitTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -114,13 +114,13 @@
     </div>
 
     <div class="ref-description">
-    <p>This function provides row indices for data splitting, e.g. into training, validation, and test. Different types of split strategies are supported ("basic", "stratified" (the default), or "grouped"), see Details. The partition indices are either returned as a list with one element per partition (the default) or as vector of partition ids.</p>
+    <p>This function provides row indices for data splitting, e.g. into training, validation, and test. Different types of split strategies are supported ("basic", "stratified" (the default), "grouped", or "blocked"), see Details. The partition indices are either returned as a list with one element per partition (the default) or as vector of partition ids.</p>
     </div>
 
     <pre class="usage"><span class='fu'>partition</span>(
   <span class='no'>y</span>,
   <span class='no'>p</span>,
-  <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"stratified"</span>, <span class='st'>"basic"</span>, <span class='st'>"grouped"</span>),
+  <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"stratified"</span>, <span class='st'>"basic"</span>, <span class='st'>"grouped"</span>, <span class='st'>"blocked"</span>),
   <span class='kw'>n_bins</span> <span class='kw'>=</span> <span class='fl'>10</span>,
   <span class='kw'>split_into_list</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>use_names</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
@@ -132,7 +132,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>y</th>
-      <td><p>Either the variable used for "stratification" or "grouped" splits. For "basic" splits, any vector of the same length as the data intended to split.</p></td>
+      <td><p>Either the variable used for "stratification" or "grouped" splits. For other types of splits, any vector of the same length as the data intended to split.</p></td>
     </tr>
     <tr>
       <th>p</th>
@@ -140,7 +140,7 @@
     </tr>
     <tr>
       <th>type</th>
-      <td><p>Split type. One of "stratified", "basic", "grouped". The default is "stratified".</p></td>
+      <td><p>Split type. One of "stratified", "basic", "grouped", "blocked". The default is "stratified".</p></td>
     </tr>
     <tr>
       <th>n_bins</th>
@@ -165,7 +165,7 @@
     <p>A list with row indices per partition (if <code>split_into_list = TRUE</code>) or a vector of partition ids.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>By default, the function uses stratified splitting. This will balance the partitions as good as possible regarding the distribution of the input vector <code>y</code>. Numeric input is first binned into <code>n_bins</code> quantile groups. If <code>type = "grouped"</code>, groups specified by <code>y</code> are kept together when splitting. This is relevant for clustered or panel data.</p>
+    <p>By default, the function uses stratified splitting. This will balance the partitions as good as possible regarding the distribution of the input vector <code>y</code>. Numeric input is first binned into <code>n_bins</code> quantile groups. If <code>type = "grouped"</code>, groups specified by <code>y</code> are kept together when splitting. This is relevant for clustered or panel data. In contrast to basic splitting, <code>type = "blocked"</code> does not sample indices at random, but rather keeps them in groups: e.g. the first 80<!-- % of observations form a training set and the remaining 20% are used for testing. --></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='no'>letters</span>[<span class='fl'>1</span>:<span class='fl'>4</span>]), <span class='kw'>each</span> <span class='kw'>=</span> <span class='fl'>5</span>)
@@ -190,6 +190,11 @@
 #&gt; 
 #&gt; $`2`
 #&gt;  [1]  1  2  3  4  5 11 12 13 14 15
+#&gt; </div><div class='input'><span class='fu'>partition</span>(<span class='no'>y</span>, <span class='kw'>p</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.7</span>, <span class='fl'>0.3</span>), <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"blocked"</span>)</div><div class='output co'>#&gt; $`1`
+#&gt;  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14
+#&gt; 
+#&gt; $`2`
+#&gt; [1] 15 16 17 18 19 20
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

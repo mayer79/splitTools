@@ -19,7 +19,8 @@
 #' create_folds(y, k = 2)
 #' create_folds(y, k = 2, m_rep = 2)
 #' create_folds(y, k = 3, type = "blocked")
-create_folds <- function(y, k = 5, type = c("stratified", "basic", "grouped", "blocked"),
+create_folds <- function(y, k = 5,
+                         type = c("stratified", "basic", "grouped", "blocked"),
                          n_bins = 10, m_rep = 1, use_names = TRUE,
                          invert = FALSE, seed = NULL) {
   # Input checks
@@ -37,13 +38,15 @@ create_folds <- function(y, k = 5, type = c("stratified", "basic", "grouped", "b
     set.seed(seed)
   }
   p <- rep(1 / k, times = k)
-  if (use_names) {
+  if (use_names && m_rep > 1) {
     sfx <- .names("Rep", seq_len(m_rep))
   }
   f <- function(i = 1) {
     res <- partition(y = y, p = p, type = type, n_bins = n_bins,
                      split_into_list = TRUE, use_names = FALSE)
-    res <- if (invert) res else lapply(res, function(z) seq_along(y)[-z])
+    if (!invert) {
+      res <- lapply(res, function(z) seq_along(y)[-z])
+    }
     if (use_names) {
       names(res) <- .names("Fold", seq_along(res))
       if (m_rep > 1) {

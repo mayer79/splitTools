@@ -2,4 +2,4 @@
 
 0 errors | 0 warnings | 0 note
 
-* The new version of the package contains additional split types like "blocked" cross-validation.
+* The new version of the package allows blocked splits as well as time series fold creation.

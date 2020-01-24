@@ -7,7 +7,7 @@
 create_folds(
   y,
   k = 5,
-  type = c("stratified", "basic", "grouped"),
+  type = c("stratified", "basic", "grouped", "blocked"),
   n_bins = 10,
   m_rep = 1,
   use_names = TRUE,
@@ -16,11 +16,11 @@ create_folds(
 )
 }
 \arguments{
-\item{y}{Either the variable used for "stratification" or "grouped" splits. For "basic" splits, any vector of the same length as the data intended to split.}
+\item{y}{Either the variable used for "stratification" or "grouped" splits. For other types of splits, any vector of the same length as the data intended to split.}
 
 \item{k}{Number of folds.}
 
-\item{type}{Split type. One of "stratified", "basic", "grouped". The default is "stratified".}
+\item{type}{Split type. One of "stratified", "basic", "grouped", "blocked". The default is "stratified".}
 
 \item{n_bins}{Approximate numbers of bins for numeric \code{y} and \code{type = "stratified"}.}
 
@@ -36,14 +36,15 @@ create_folds(
 A list with row indices per fold.
 }
 \description{
-This function provides a list of row indices per fold of k-fold cross-validation (basic, stratified, or grouped). Repeated fold creation is supported as well.
+This function provides a list of row indices per fold of k-fold cross-validation (basic, stratified, grouped, or blocked). Repeated fold creation is supported as well.
 }
 \details{
-By default, the function uses stratified splitting. This will balance the folds regarding the distribution of the input vector \code{y}. Numeric input is first binned into \code{n_bins} quantile groups. If \code{type = "grouped"}, groups specified by \code{y} are kept together when splitting. This is relevant for clustered or panel data.
+By default, the function uses stratified splitting. This will balance the folds regarding the distribution of the input vector \code{y}. Numeric input is first binned into \code{n_bins} quantile groups. If \code{type = "grouped"}, groups specified by \code{y} are kept together when splitting. This is relevant for clustered or panel data. In contrast to basic splitting, \code{type = "blocked"} does not sample indices at random, but rather keeps them in sequential groups.
 }
 \examples{
 y <- rep(c(letters[1:4]), each = 5)
 create_folds(y)
 create_folds(y, k = 2)
 create_folds(y, k = 2, m_rep = 2)
+create_folds(y, k = 3, type = "blocked")
 }
