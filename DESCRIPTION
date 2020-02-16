@@ -2,7 +2,7 @@ Type: Package
 Package: splitTools
 Title: Tools for Data Splitting
 Version: 0.2.0
-Date: 2020-01-24
+Date: 2020-02-16
 Authors@R: 
     person(given = "Michael",
            family = "Mayer",

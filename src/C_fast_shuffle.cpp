@@ -7,15 +7,12 @@ using namespace Rcpp;
 inline int randWrapper(const int n) { return floor(unif_rand() * n); }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector C_fast_shuffle(Rcpp::NumericVector x, double n) {
+Rcpp::NumericVector C_fast_shuffle(Rcpp::NumericVector x) {
   // clone x into out to leave a alone
   Rcpp::NumericVector out = clone(x);
 
   std::random_shuffle(out.begin(), out.end(), randWrapper);
 
-  if (out.size() > n) {
-    out = out[Rcpp::Range(0, n - 1)];
-  }
-
   return out;
 }
+
