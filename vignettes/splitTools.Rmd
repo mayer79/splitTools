@@ -88,11 +88,11 @@ rmse(test$Sepal.Length, predict(final_fit, test)$predictions)
 
 ## Cross-validation
 
-Since our data set consists of only 150 rows, investing 20% of observations for validation is neither robust nor data efficient. Let's modify the modelling strategy by replacing simple validation by five-fold cross-validation, again using stratification on the response variable.
+Since our data set consists of only 150 rows, investing 20% of observations for validation is neither very robust nor data efficient. Let's modify the modelling strategy by replacing simple validation by five-fold cross-validation, again using stratification on the response variable.
 
 1. Split the data set `iris` into 80% training data and 20% test, stratified by the variable `Sepal.Length`. 
 
-2. Use stratified five-fold cross-validation to tune the parameter `mtry`. We do this on the validation data.
+2. Use stratified five-fold cross-validation to tune the parameter `mtry`. We do this on the training data.
 
 3. After selecting the best `mtry` by this simple "GridSearchCV", we challenge the final model on the test data set.
 
