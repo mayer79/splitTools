@@ -6,6 +6,10 @@
 
 - Added function `create_timefolds` for cross-validation of time series data.
 
+## Other
+
+Added vignette
+
 # splitTools 0.1.0
 
 This is the initial CRAN release.
