@@ -18,13 +18,13 @@ create_package(
   fields = list(
     Title = "Tools for Data Splitting",
     Type = "Package",
-    Version = "0.2.0",
+    Version = "0.2.1",
     Date = Sys.Date(),
     Description = "Fast, lightweight toolkit for data splitting. Data sets can be partitioned into disjoint groups (e.g. into training, validation, and test) or into (repeated) k-folds for subsequent cross-validation. Besides basic splits, the package supports stratified, grouped as well as blocked splitting. Furthermore, cross-validation folds for time series data can be created. See e.g. Hastie et al. (2001) <doi:10.1007/978-0-387-84858-7> for the basic background on data partitioning and cross-validation.",
     `Authors@R` = "person('Michael', 'Mayer', email = 'mayermichael79@gmail.com', role = c('aut', 'cre'))",
     URL = "https://github.com/mayer79/splitTools",
     BugReports = "https://github.com/mayer79/splitTools/issues",
-    Depends = "R (>= 3.5.0)",
+    Depends = "R (>= 3.1.0)",
     VignetteBuilder = "knitr",
     License = "GPL(>= 2)",
     Maintainer = "Michael Mayer <mayermichael79@gmail.com>"))
@@ -73,6 +73,3 @@ check_win_devel(pkg)
 check_rhub(pkg)
 
 devtools::release(pkg)
-
-usethis::use_pkgdown()
-pkgdown::build_site(pkg)

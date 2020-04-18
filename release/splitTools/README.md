@@ -16,7 +16,7 @@ Its two main functions `partition` and `create_folds` support
 
 - blocked splitting (if the sequential order of the data should be retained).
 
-The function `create_timefolds` does time-series splitting where the out-of-sample data follows the (growing) in-sample data.
+The function `create_timefolds` does time-series splitting where the out-of-sample data follows the (extending or moving) in-sample data.
 
 ## Installation
 

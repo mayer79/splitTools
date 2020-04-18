@@ -1,7 +1,3 @@
-## R CMD check results
+This is a minor update lowering the minimally required R version.
 
-0 errors | 0 warnings | 0 note
-
-* The new version of the package allows blocked splits as well as time series fold creation. 
-
-* A vignette has been added.
+Furthermore, the time-series splitter has been generalized.

@@ -4,7 +4,7 @@
 \alias{create_timefolds}
 \title{Creates Folds for Time Series Data}
 \usage{
-create_timefolds(y, k = 5, use_names = TRUE)
+create_timefolds(y, k = 5, use_names = TRUE, type = c("extending", "moving"))
 }
 \arguments{
 \item{y}{Any vector of the same length as the data intended to split.}
@@ -12,6 +12,8 @@ create_timefolds(y, k = 5, use_names = TRUE)
 \item{k}{Number of folds.}
 
 \item{use_names}{Should folds be named? Default is \code{TRUE}.}
+
+\item{type}{Should insample data be "extending" over the folds (default) or consist of one single fold ("moving")?}
 }
 \value{
 A nested list with in-sample ("insample") and out-of-sample ("outsample") indices per fold.
@@ -20,10 +22,11 @@ A nested list with in-sample ("insample") and out-of-sample ("outsample") indice
 This function provides a list with in- and out-of-sample indices per fold used for time series k-fold cross-validation, see Details.
 }
 \details{
-The data is first partitioned into k+1 sequential blocks B_1 to B_{k+1}. Each fold consists of two index vectors: one with in-sample row numbers, the other with out-of-sample row numbers. The first fold uses B_1 as in-sample and B_2 as out-of-sample data. The second one uses {B_1, B_2} as in-sample and B_3 as out-of-sample data etc. until the kth fold with {B_1, ..., B_k} as in-sample and B_{k+1} as out-of-sample data. This makes sure that out-of-sample data always follows in-sample data.
+The data is first partitioned into k+1 sequential blocks B_1 to B_{k+1}. Each fold consists of two index vectors: one with in-sample row numbers, the other with out-of-sample row numbers. The first fold uses B_1 as in-sample and B_2 as out-of-sample data. The second one uses either B_2 (if \code{type = "extending"}) or {B_1, B_2} (if \code{type = "moving"}) as in-sample and B_3 as out-of-sample data etc. until the kth fold with {B_1, ..., B_k} ("extending") resp. B_k ("moving") as in-sample and B_{k+1} as out-of-sample data. This makes sure that out-of-sample data always follows in-sample data.
 }
 \examples{
 y <- runif(100)
 create_timefolds(y)
 create_timefolds(y, use_names = FALSE)
+create_timefolds(y, use_names = FALSE, type = "moving")
 }

@@ -1,3 +1,13 @@
+# splitTools 0.2.1
+
+## New Functionality
+
+- `create_timefolds` now allows also moving windows training data, not just extending windows data.
+
+## Other
+
+Reduced minimally required R version from 3.5 to 3.1.
+
 # splitTools 0.2.0
 
 ## New Functionality

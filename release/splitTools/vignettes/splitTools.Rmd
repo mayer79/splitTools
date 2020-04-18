@@ -88,11 +88,11 @@ rmse(test$Sepal.Length, predict(final_fit, test)$predictions)
 
 ## Cross-validation
 
-Since our data set consists of only 150 rows, investing 20% of observations for validation is neither robust nor data efficient. Let's modify the modelling strategy by replacing simple validation by five-fold cross-validation, again using stratification on the response variable.
+Since our data set consists of only 150 rows, investing 20% of observations for validation is neither very robust nor data efficient. Let's modify the modelling strategy by replacing simple validation by five-fold cross-validation, again using stratification on the response variable.
 
 1. Split the data set `iris` into 80% training data and 20% test, stratified by the variable `Sepal.Length`. 
 
-2. Use stratified five-fold cross-validation to tune the parameter `mtry`. We do this on the validation data.
+2. Use stratified five-fold cross-validation to tune the parameter `mtry`. We do this on the training data.
 
 3. After selecting the best `mtry` by this simple "GridSearchCV", we challenge the final model on the test data set.
 
@@ -160,17 +160,17 @@ rmse(test$Sepal.Length, predict(final_fit, test)$predictions)
 
 When modelling time series, usual cross-validation destroys the sequential nature of the data. This can be avoided by the following modification of k-fold cross-validation:
 
-The data is first split into $k+1$ blocks $B_1, ..., B_{k+1}$, in sequential order. The following data sets are used in cross-validation:
+The data is first split into $k+1$ blocks $B_1, ..., B_{k+1}$, in sequential order. Depending of `type = "extending"` (default) or `type == "moving"`, the following data sets are used in cross-validation:
 
 - First fold: $B_1$ is used for training, $B_2$ for evaluation.
 
-- Second fold: $\{B_1, B_2\}$ is used for training, $B_3$ for evaluation.
+- Second fold: $\{B_1, B_2\}$ resp. $B_2$ is used for training if type is "extending" resp. "moving", $B_3$ for evaluation.
 
 - ...
 
-- $k$-th fold: $\{B_1, ..., B_k\}$ is used for training, $B_{k+1}$ for evaluation.
+- $k$-th fold: $\{B_1, ..., B_k\}$ resp. $B_{k}$ is used for training for type "extending" resp. "moving", $B_{k+1}$ for evaluation.
 
-This schema makes sure that the evaluation data set always follows the training data. Note that the training data grows over the whole process linearly.
+These schemata make sure that the evaluation data set always follows the training data. Note that the training data grows over the whole process linearly with `type = "extending"` whereas its length is approximately constant with `type = "moving"`.
 
 In order to have a final evaluation of the optimized model, typically an initial blocked split into sequential training and testing data is done.
 
