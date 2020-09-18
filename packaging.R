@@ -18,7 +18,7 @@ create_package(
   fields = list(
     Title = "Tools for Data Splitting",
     Type = "Package",
-    Version = "0.2.1",
+    Version = "0.2.2",
     Date = Sys.Date(),
     Description = "Fast, lightweight toolkit for data splitting. Data sets can be partitioned into disjoint groups (e.g. into training, validation, and test) or into (repeated) k-folds for subsequent cross-validation. Besides basic splits, the package supports stratified, grouped as well as blocked splitting. Furthermore, cross-validation folds for time series data can be created. See e.g. Hastie et al. (2001) <doi:10.1007/978-0-387-84858-7> for the basic background on data partitioning and cross-validation.",
     `Authors@R` = "person('Michael', 'Mayer', email = 'mayermichael79@gmail.com', role = c('aut', 'cre'))",
@@ -27,12 +27,15 @@ create_package(
     Depends = "R (>= 3.1.0)",
     VignetteBuilder = "knitr",
     License = "GPL(>= 2)",
-    Maintainer = "Michael Mayer <mayermichael79@gmail.com>"))
+    Maintainer = "Michael Mayer <mayermichael79@gmail.com>"),
+  open = FALSE)
 
 file.copy(file.path(pkg, "DESCRIPTION"), to = getwd(), overwrite = TRUE)
 # Use package has no option to look for pkg, so we first copy description from pkg, modify it and move back
 use_package("stats", "Imports")
 use_package("knitr", "Suggests")
+use_package("rmarkdown", "Suggests")
+use_package("testthat", "Suggests")
 use_package("ranger", "Suggests")
 
 # use_rcpp(pkg)
@@ -41,23 +44,37 @@ use_package("ranger", "Suggests")
 # use_readme_md()
 # use_news_md()
 # use_cran_comments()
+# use_testthat()
 
 # Copy readme etc.
-file.copy(c("NEWS.md", "README.md", "cran-comments.md", "DESCRIPTION", ".Rbuildignore"), pkg, overwrite = TRUE)
+file.copy(c("NEWS.md", "README.md", "cran-comments.md", "DESCRIPTION", ".Rbuildignore"),
+          pkg, overwrite = TRUE)
 
 # Copy R scripts and document them
+if (!dir.exists(file.path(pkg, "R"))) {
+  dir.create(file.path(pkg, "R"))
+}
 file.copy(list.files("R", full.names = TRUE), file.path(pkg, "R"), overwrite = TRUE)
 devtools::document(pkg)
 
-# Copy vignette
-# use_vignette(name = "splitTools", title = "splitTools")
-dir.create(file.path(pkg, "vignettes"))
-dir.create(file.path(pkg, "doc"))
-dir.create(file.path(pkg, "Meta"))
-file.copy(list.files("vignettes", full.names = TRUE),
-          file.path(pkg, "vignettes"), overwrite = TRUE)
+# Tests
+if (!dir.exists(file.path(pkg, "tests"))) {
+  dir.create(file.path(pkg, "tests"))
+}
+file.copy("tests", pkg, recursive = TRUE)
+# test(pkg)
 
-devtools::build_vignettes(pkg)
+if (TRUE) {
+  # Copy vignette
+  # use_vignette(name = "splitTools", title = "splitTools")
+  dir.create(file.path(pkg, "vignettes"), showWarnings = FALSE)
+  dir.create(file.path(pkg, "doc"), showWarnings = FALSE)
+  dir.create(file.path(pkg, "Meta"), showWarnings = FALSE)
+  file.copy(list.files("vignettes", full.names = TRUE),
+            file.path(pkg, "vignettes"), overwrite = TRUE)
+
+  devtools::build_vignettes(pkg)
+}
 
 # Check
 check(pkg, manual = TRUE)
