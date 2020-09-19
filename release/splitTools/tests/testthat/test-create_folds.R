@@ -109,4 +109,13 @@ test_that("stratified splitting on continous data reacts on n_bins", {
                            FUN.VALUE = numeric(1), USE.NAMES = FALSE)), 0)
 })
 
+test_that("tiny data sets are providing non-empty folds for stratified sampling", {
+  y <- c("A", "A", "B")
+  expect_message(create_folds(y, k = 3, seed = 4))
+})
+
+test_that("tiny data sets are providing non-empty folds for basic sampling", {
+  y <- c("A", "A", "B", "B")
+  expect_message(create_folds(y, k = 3, seed = 4, type = "basic"))
+})
 

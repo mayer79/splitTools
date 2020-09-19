@@ -121,4 +121,22 @@ test_that("stratified splitting on continous data reacts on n_bins", {
   expect_equal(isTRUE(all.equal(out1, out2)), FALSE)
 })
 
+test_that("tiny data sets are providing non-empty partitions for stratified sampling", {
+  y <- c("A", "A", "B")
+  expect_message(partition(y, p = c(0.9, 0.1), seed = 1))
+  expect_message(partition(y, p = c(0.9, 0.1, 0.2), seed = 10))
+})
+
+test_that("tiny data sets are providing non-empty partitions for basic sampling", {
+  y <- c("A", "A", "B")
+  expect_message(partition(y, p = c(0.9, 0.1), seed = 2, type = "basic"))
+  expect_message(partition(y, p = c(0.9, 0.1, 0.2), seed = 10, type = "basic"))
+})
+
+test_that("tiny data sets are providing non-empty partitions for grouped sampling", {
+  y <- c("A", "A", "B")
+  expect_message(partition(y, p = c(0.9, 0.1), seed = 1, type = "grouped"))
+})
+
+
 
