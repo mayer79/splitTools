@@ -41,6 +41,7 @@ partition <- function(y, p,
   # Calculation of partition ids
   if (type == "basic") {
     out <- .smp_fun(n, p)
+    out <- .balancer(out, p = p)
   } else if (type == "blocked") {
     out <- rep.int(seq_along(p), times = ceiling(p * n))[seq_len(n)]
   } else if (type == "stratified") {
@@ -51,11 +52,13 @@ partition <- function(y, p,
       y <- factor(y, exclude = NULL)
     }
     out <- ave(integer(n), y, FUN = function(z) .smp_fun(length(z), p))
+    out <- .balancer(out, p = p)
   } else if (type == "grouped") {
     y_unique <- unique(y)
     m <- length(y_unique)
     stopifnot(length(p) <= m)
     y_folds <- .smp_fun(m, p)
+    y_folds <- .balancer(y_folds, p = p)
     out <- y_folds[match(y, y_unique)]
   }
 
@@ -67,11 +70,49 @@ partition <- function(y, p,
 }
 
 # Little helpers
+
+# Efficient binning
 .bin <- function(y, n_bins) {
   qu <- quantile(y, seq(0, 1, length.out = n_bins + 1), na.rm = TRUE)
   findInterval(y, unique(qu), rightmost.closed = TRUE)
 }
 
+# This this secret heart of splitTools
 .smp_fun <- function(n, p) {
   sample(rep.int(seq_along(p), times = ceiling(p * n)), n)
 }
+
+# Rebalances empty partitions
+.balancer <- function(fi, p) {
+  counts <- tabulate(fi, nbins = length(p))
+  empty <- which(counts == 0L)
+  n_empty <- length(empty)
+
+  if (n_empty == 0L) {
+    return(fi)
+  }
+
+  message("Empty partition detected. Redistributing...")
+
+  # Find positions of potential donators
+  drop_random <- function(z) {
+    m <- length(z) - 1L
+    if (m >= 1L) sample(z, m)
+  }
+
+  positions <- split(seq_along(fi), fi)
+  donators <- unlist(lapply(positions, drop_random), use.names = FALSE)
+  n_donators <- length(donators)
+
+  # Randomly select donators
+  if (n_empty > n_donators) {
+    warning("Cannot fill all empty partitions.")
+    n_empty <- n_donators
+  }
+  selected <- donators[sample.int(n_donators, n_empty)]
+
+  # Replace donators by empty partition numbers
+  fi[selected] <- empty
+  fi
+}
+

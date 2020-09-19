@@ -1,3 +1,13 @@
+# splitTools 0.3.0
+
+## Breaking change for tiny data sets
+
+- `create_folds` and `partition` cannot return empty folds/partitions anymore. This impacts only extremely small data sets.
+
+## Other
+
+- Unit tests have been added.
+
 # splitTools 0.2.1
 
 ## New Functionality
