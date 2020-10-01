@@ -1,3 +1,9 @@
+# splitTools 0.3.1
+
+## New Functionality
+
+- `create_folds` and `partition` have received a `shuffle` option to shuffle rows within folds/partitions. The default is FALSE.
+
 # splitTools 0.3.0
 
 ## Breaking change for tiny data sets

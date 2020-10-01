@@ -50,6 +50,22 @@ test_that("argument 'use_names' works", {
   expect_named(create_folds(y, k = 3, use_names = FALSE), NULL)
 })
 
+test_that("argument 'shuffle' works for stratified splitting", {
+  y <- rep(LETTERS[1:10], each = 10)
+  out1 <- create_folds(y, k = 3, seed = 1)
+  out2 <- create_folds(y, k = 3, seed = 1, shuffle = TRUE)
+  expect_false(all(out1[[1]] == out2[[1]]))
+  expect_true(all(out1[[1]] == sort(out2[[1]])))
+})
+
+test_that("argument 'shuffle' works for grouped splitting", {
+  y <- rep(LETTERS[1:10], each = 10)
+  out1 <- create_folds(y, k = 3, seed = 1, type = "grouped")
+  out2 <- create_folds(y, k = 3, seed = 1, shuffle = TRUE, type = "grouped")
+  expect_false(all(out1[[1]] == out2[[1]]))
+  expect_true(all(out1[[1]] == sort(out2[[1]])))
+})
+
 test_that("argument 'm_rep' works", {
   y <- rep(LETTERS[1:10], each = 10)
   out <- create_folds(y, k = 5, m_rep = 2)
