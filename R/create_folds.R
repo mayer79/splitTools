@@ -10,6 +10,7 @@
 #' @param m_rep How many times should the data be split into k folds? Default is 1, i.e. no repetitions.
 #' @param use_names Should folds be named? Default is \code{TRUE}.
 #' @param invert Set to \code{TRUE} if the row numbers not in the fold are to be returned. Default is \code{FALSE}.
+#' @param shuffle Should row indices be randomly shuffled within folds? Default is \code{FALSE}.
 #' @param seed Integer random seed.
 #' @return A list with row indices per fold.
 #' @export
@@ -22,7 +23,7 @@
 create_folds <- function(y, k = 5,
                          type = c("stratified", "basic", "grouped", "blocked"),
                          n_bins = 10, m_rep = 1, use_names = TRUE,
-                         invert = FALSE, seed = NULL) {
+                         invert = FALSE, shuffle = FALSE, seed = NULL) {
   # Input checks
   type <- match.arg(type)
   stopifnot(is.atomic(y), length(y) >= 2L,
@@ -43,9 +44,14 @@ create_folds <- function(y, k = 5,
   }
   f <- function(i = 1) {
     res <- partition(y = y, p = p, type = type, n_bins = n_bins,
-                     split_into_list = TRUE, use_names = FALSE)
+                     split_into_list = TRUE, use_names = FALSE,
+                     shuffle = shuffle)
     if (!invert) {
-      res <- lapply(res, function(z) seq_along(y)[-z])
+      if (shuffle) {
+        res <- lapply(seq_along(res), function(i) unlist(res[-i], use.names = FALSE))
+      } else {
+        res <- lapply(res, function(z) seq_along(y)[-z])
+      }
     }
     if (use_names) {
       names(res) <- .names("Fold", seq_along(res))

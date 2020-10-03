@@ -11,6 +11,7 @@ partition(
   n_bins = 10,
   split_into_list = TRUE,
   use_names = TRUE,
+  shuffle = FALSE,
   seed = NULL
 )
 }
@@ -26,6 +27,8 @@ partition(
 \item{split_into_list}{Should the resulting partition vector be split into a list or not? Default is\code{TRUE}.}
 
 \item{use_names}{Should names of \code{p} be used as partition names? Default is \code{TRUE}.}
+
+\item{shuffle}{Should row indices be randomly shuffled within partition? Default is \code{FALSE}. Shuffling is only possible when \code{split_into_list = TRUE}.}
 
 \item{seed}{Integer random seed.}
 }

@@ -12,6 +12,7 @@ create_folds(
   m_rep = 1,
   use_names = TRUE,
   invert = FALSE,
+  shuffle = FALSE,
   seed = NULL
 )
 }
@@ -29,6 +30,8 @@ create_folds(
 \item{use_names}{Should folds be named? Default is \code{TRUE}.}
 
 \item{invert}{Set to \code{TRUE} if the row numbers not in the fold are to be returned. Default is \code{FALSE}.}
+
+\item{shuffle}{Should row indices be randomly shuffled within folds? Default is \code{FALSE}.}
 
 \item{seed}{Integer random seed.}
 }

@@ -10,6 +10,7 @@
 #' @param n_bins Approximate numbers of bins for numeric \code{y} and \code{type = "stratified"}.
 #' @param split_into_list Should the resulting partition vector be split into a list or not? Default is\code{TRUE}.
 #' @param use_names Should names of \code{p} be used as partition names? Default is \code{TRUE}.
+#' @param shuffle Should row indices be randomly shuffled within partition? Default is \code{FALSE}. Shuffling is only possible when \code{split_into_list = TRUE}.
 #' @param seed Integer random seed.
 #' @return A list with row indices per partition (if \code{split_into_list = TRUE}) or a vector of partition ids.
 #' @export
@@ -24,8 +25,8 @@
 #' partition(y, p = c(0.7, 0.3), type = "grouped")
 #' partition(y, p = c(0.7, 0.3), type = "blocked")
 partition <- function(y, p,
-                      type = c("stratified", "basic", "grouped", "blocked"),
-                      n_bins = 10, split_into_list = TRUE, use_names = TRUE, seed = NULL) {
+                      type = c("stratified", "basic", "grouped", "blocked"), n_bins = 10,
+                      split_into_list = TRUE, use_names = TRUE, shuffle = FALSE, seed = NULL) {
   # Input checks
   type <- match.arg(type)
   stopifnot(length(p) >= 1L, p > 0,
@@ -41,7 +42,7 @@ partition <- function(y, p,
   # Calculation of partition ids
   if (type == "basic") {
     out <- .smp_fun(n, p)
-    out <- .balancer(out, p = p)
+    out <- .fill_empty_partitions(out, p = p)
   } else if (type == "blocked") {
     out <- rep.int(seq_along(p), times = ceiling(p * n))[seq_len(n)]
   } else if (type == "stratified") {
@@ -52,13 +53,13 @@ partition <- function(y, p,
       y <- factor(y, exclude = NULL)
     }
     out <- ave(integer(n), y, FUN = function(z) .smp_fun(length(z), p))
-    out <- .balancer(out, p = p)
+    out <- .fill_empty_partitions(out, p = p)
   } else if (type == "grouped") {
     y_unique <- unique(y)
     m <- length(y_unique)
     stopifnot(length(p) <= m)
     y_folds <- .smp_fun(m, p)
-    y_folds <- .balancer(y_folds, p = p)
+    y_folds <- .fill_empty_partitions(y_folds, p = p)
     out <- y_folds[match(y, y_unique)]
   }
 
@@ -66,10 +67,25 @@ partition <- function(y, p,
   if (use_names && !is.null(names(p))) {
     out <- factor(out, levels = seq_along(p), labels = names(p))
   }
-  if (split_into_list) split(seq_along(y), out) else out
+  if (!split_into_list) {
+    if (shuffle) {
+      message("Shuffling has no effect with split_into_list = TRUE.")
+    }
+    return(out)
+  }
+  out <- split(seq_along(y), out)
+  if (shuffle) {
+    out <- lapply(out, .shuffle)
+  }
+  out
 }
 
 # Little helpers
+
+# Save shuffling (even if x has length 1)
+.shuffle <- function(x, ...) {
+  x[sample.int(length(x), ...)]
+}
 
 # Efficient binning
 .bin <- function(y, n_bins) {
@@ -82,8 +98,8 @@ partition <- function(y, p,
   sample(rep.int(seq_along(p), times = ceiling(p * n)), n)
 }
 
-# Rebalances empty partitions
-.balancer <- function(fi, p) {
+# Fills empty partitions
+.fill_empty_partitions <- function(fi, p) {
   counts <- tabulate(fi, nbins = length(p))
   empty <- which(counts == 0L)
   n_empty <- length(empty)
@@ -94,25 +110,24 @@ partition <- function(y, p,
 
   message("Empty partition detected. Redistributing...")
 
-  # Find positions of potential donators
+  # Find positions of potential donors
   drop_random <- function(z) {
     m <- length(z) - 1L
     if (m >= 1L) sample(z, m)
   }
-
   positions <- split(seq_along(fi), fi)
-  donators <- unlist(lapply(positions, drop_random), use.names = FALSE)
-  n_donators <- length(donators)
+  donors <- unlist(lapply(positions, drop_random), use.names = FALSE)
+  n_donors <- length(donors)
 
-  # Randomly select donators
-  if (n_empty > n_donators) {
-    warning("Cannot fill all empty partitions.")
-    n_empty <- n_donators
+  # Randomly select donors
+  if (n_empty > n_donors) {
+    message("Cannot fill all empty partitions.")
+    n_empty <- n_donors
   }
-  selected <- donators[sample.int(n_donators, n_empty)]
+  selected <- donors[sample.int(n_donors, n_empty)]
 
-  # Replace donators by empty partition numbers
-  fi[selected] <- empty
+  # Replace donors by empty partition numbers
+  fi[selected] <- empty[seq_len(n_empty)]
   fi
 }
 

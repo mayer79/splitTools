@@ -45,6 +45,30 @@ test_that("argument 'seed' works", {
   expect_equal(partition(y, p, seed = 1), partition(y, p, seed = 1))
 })
 
+test_that("argument 'shuffle' works for stratified splitting", {
+  y <- rep(LETTERS[1:10], each = 10)
+  p <- c(0.6, 0.2, 0.2)
+  out1 <- partition(y, p, seed = 1)
+  out2 <- partition(y, p, seed = 1, shuffle = TRUE)
+  expect_false(all(out1[[1]] == out2[[1]]))
+  expect_true(all(out1[[1]] == sort(out2[[1]])))
+})
+
+test_that("argument 'shuffle' works for grouped splitting", {
+  y <- rep(LETTERS[1:10], each = 10)
+  p <- c(0.6, 0.2, 0.2)
+  out1 <- partition(y, p, seed = 1, type = "grouped")
+  out2 <- partition(y, p, seed = 1, shuffle = TRUE, type = "grouped")
+  expect_false(all(out1[[1]] == out2[[1]]))
+  expect_true(all(out1[[1]] == sort(out2[[1]])))
+})
+
+test_that("argument 'shuffle' raises message with split_into_list = FALSE", {
+  y <- rep(LETTERS[1:10], each = 10)
+  p <- c(0.6, 0.2, 0.2)
+  expect_message( partition(y, p,  split_into_list = FALSE, shuffle = TRUE))
+})
+
 test_that("argument 'use_names' works", {
   y <- rep(LETTERS[1:10], each = 10)
   p <- c(0.6, 0.2, 0.2)
@@ -125,6 +149,7 @@ test_that("tiny data sets are providing non-empty partitions for stratified samp
   y <- c("A", "A", "B")
   expect_message(partition(y, p = c(0.9, 0.1), seed = 1))
   expect_message(partition(y, p = c(0.9, 0.1, 0.2), seed = 10))
+  expect_message(partition(1:2, p = c(0.3, 0.3, 0.4), seed = 4))
 })
 
 test_that("tiny data sets are providing non-empty partitions for basic sampling", {
@@ -137,6 +162,8 @@ test_that("tiny data sets are providing non-empty partitions for grouped samplin
   y <- c("A", "A", "B")
   expect_message(partition(y, p = c(0.9, 0.1), seed = 1, type = "grouped"))
 })
+
+partition(1:2, p = c(0.3, 0.3, 0.4), seed = 4)
 
 
 
