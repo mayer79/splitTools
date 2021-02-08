@@ -1,5 +1,7 @@
 # splitTools
 
+[![CRAN version](http://www.r-pkg.org/badges/version/splitTools)](https://cran.r-project.org/package=splitTools) [![](https://cranlogs.r-pkg.org/badges/splitTools)](https://cran.r-project.org/package=splitTools) [![](https://cranlogs.r-pkg.org/badges/grand-total/splitTools?color=orange)](https://cran.r-project.org/package=splitTools)
+
 `splitTools` is a fast, lightweight toolkit for data splitting. 
 
 Its two main functions `partition` and `create_folds` support
