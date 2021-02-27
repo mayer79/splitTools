@@ -2,7 +2,7 @@
 
 [![CRAN version](http://www.r-pkg.org/badges/version/splitTools)](https://cran.r-project.org/package=splitTools) [![](https://cranlogs.r-pkg.org/badges/splitTools)](https://cran.r-project.org/package=splitTools) [![](https://cranlogs.r-pkg.org/badges/grand-total/splitTools?color=orange)](https://cran.r-project.org/package=splitTools)
 
-`splitTools` is a fast, lightweight toolkit for data splitting. 
+`splitTools` is a toolkit for fast data splitting. It does not have any dependencies. 
 
 Its two main functions `partition` and `create_folds` support
 
@@ -19,6 +19,8 @@ Its two main functions `partition` and `create_folds` support
 - blocked splitting (if the sequential order of the data should be retained).
 
 The function `create_timefolds` does time-series splitting where the out-of-sample data follows the (extending or moving) in-sample data.
+
+The result of `create_folds` can be directly passed to the `folds` argument in cross-validation functions of XGBoost or LightGBM.
 
 ## Installation
 
