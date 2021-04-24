@@ -1,4 +1,5 @@
-# splitTools
+# splitTools <a href='https://github.com/mayer79/splitTools'><img src='man/figures/logo.png' align="right" height="138.5" /></a>
+
 
 [![CRAN version](http://www.r-pkg.org/badges/version/splitTools)](https://cran.r-project.org/package=splitTools) [![](https://cranlogs.r-pkg.org/badges/splitTools)](https://cran.r-project.org/package=splitTools) [![](https://cranlogs.r-pkg.org/badges/grand-total/splitTools?color=orange)](https://cran.r-project.org/package=splitTools)
 
