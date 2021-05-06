@@ -103,7 +103,7 @@ inds <- partition(iris$Sepal.Length, p = c(train = 0.8, test = 0.2))
 train <- iris[inds$train, ]
 test <- iris[inds$test, ]
 
-# Get stratified cross-validation fold indices
+# Get stratified cross-validation in-sample indices
 folds <- create_folds(train$Sepal.Length, k = 5)
 
 # Tune mtry by GridSearchCV

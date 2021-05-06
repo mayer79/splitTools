@@ -8,7 +8,7 @@
 #' @param y Any vector of the same length as the data intended to split.
 #' @param k Number of folds.
 #' @param use_names Should folds be named? Default is \code{TRUE}.
-#' @param type Should insample data be "extending" over the folds (default) or consist of one single fold ("moving")?
+#' @param type Should in-sample data be "extending" over the folds (default) or consist of one single fold ("moving")?
 #' @return A nested list with in-sample ("insample") and out-of-sample ("outsample") indices per fold.
 #' @export
 #' @examples

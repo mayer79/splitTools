@@ -21,7 +21,8 @@ Its two main functions `partition` and `create_folds` support
 
 The function `create_timefolds` does time-series splitting where the out-of-sample data follows the (extending or moving) in-sample data.
 
-The result of `create_folds` can be directly passed to the `folds` argument in cross-validation functions of XGBoost or LightGBM.
+The result of `create_folds` can be directly passed to the `folds` argument in cross-validation functions of XGBoost or LightGBM. Since these functions expect out-of-sample indices, 
+set the option `invert = TRUE`.
 
 ## Installation
 
