@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_folds.R
 \name{create_folds}
 \alias{create_folds}
-\title{Creates Folds}
+\title{Create Folds}
 \usage{
 create_folds(
   y,
@@ -29,17 +29,17 @@ create_folds(
 
 \item{use_names}{Should folds be named? Default is \code{TRUE}.}
 
-\item{invert}{Set to \code{TRUE} if the row numbers not in the fold are to be returned. Default is \code{FALSE}.}
+\item{invert}{Set to \code{TRUE} in order to receive out-of-sample indices. Default is \code{FALSE}, i.e. in-sample indices are returned.}
 
 \item{shuffle}{Should row indices be randomly shuffled within folds? Default is \code{FALSE}.}
 
 \item{seed}{Integer random seed.}
 }
 \value{
-A list with row indices per fold.
+If \code{invert = FALSE} (the default), a list with in-sample row indices. If \code{invert = TRUE}, a list with out-of-sample indices.
 }
 \description{
-This function provides a list of row indices per fold of k-fold cross-validation (basic, stratified, grouped, or blocked). Repeated fold creation is supported as well.
+This function provides a list of row indices used for k-fold cross-validation (basic, stratified, grouped, or blocked). Repeated fold creation is supported as well.
 }
 \details{
 By default, the function uses stratified splitting. This will balance the folds regarding the distribution of the input vector \code{y}. Numeric input is first binned into \code{n_bins} quantile groups. If \code{type = "grouped"}, groups specified by \code{y} are kept together when splitting. This is relevant for clustered or panel data. In contrast to basic splitting, \code{type = "blocked"} does not sample indices at random, but rather keeps them in sequential groups.

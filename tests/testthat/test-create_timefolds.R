@@ -1,5 +1,3 @@
-context("create_timefolds")
-
 test_that("number of folds is correct", {
   y <- rep(LETTERS[1:10], each = 10)
   out <- create_timefolds(y, k = 3)

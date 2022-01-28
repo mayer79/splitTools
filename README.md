@@ -34,7 +34,7 @@ install.packages("splitTools")
 Latest version from github:
 ``` r
 library(devtools)
-install_github("mayer79/splitTools", subdir = "release/splitTools")
+install_github("mayer79/splitTools")
 ```
 
 ## Teaser
