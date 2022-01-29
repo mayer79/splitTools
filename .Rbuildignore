@@ -1,8 +1,12 @@
-^splitTools\.Rproj$
-^\.Rproj\.user$
+^LICENSE\.md$
+^packaging.R$
+[.]Rproj$
+^backlog$
+^cran-comments.md$
+^logo.png$
 ^cran-comments\.md$
-^_pkgdown\.yml$
-^docs$
-^pkgdown$
+^.*\.Rproj$
+^\.Rproj\.user$
 ^doc$
 ^Meta$
+^CRAN-RELEASE$

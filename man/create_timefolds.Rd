@@ -13,7 +13,7 @@ create_timefolds(y, k = 5, use_names = TRUE, type = c("extending", "moving"))
 
 \item{use_names}{Should folds be named? Default is \code{TRUE}.}
 
-\item{type}{Should insample data be "extending" over the folds (default) or consist of one single fold ("moving")?}
+\item{type}{Should in-sample data be "extending" over the folds (default) or consist of one single fold ("moving")?}
 }
 \value{
 A nested list with in-sample ("insample") and out-of-sample ("outsample") indices per fold.

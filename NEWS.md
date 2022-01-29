@@ -1,3 +1,11 @@
+# splitTools 0.3.2
+
+This is documentation and maintenance update only with the following changes:
+
+- Updated documentation to clarify that `create_folds()` creates in-sample indices by default. If out-of-sample indices are to be generated, set `invert = TRUE`.
+- Got rid of a CRAN check notes about LazyData.
+- Changed to better way of updating/generating the package.
+
 # splitTools 0.3.1
 
 ## New Functionality

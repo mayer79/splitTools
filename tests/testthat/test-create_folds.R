@@ -1,5 +1,3 @@
-context("create_folds")
-
 test_that("number of folds is correct", {
   y <- rep(LETTERS[1:10], each = 10)
   out <- create_folds(y, k = 3)

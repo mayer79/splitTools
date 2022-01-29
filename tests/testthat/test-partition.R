@@ -1,5 +1,3 @@
-context("partition")
-
 test_that("number of partitions is correct", {
   y <- rep(LETTERS[1:10], each = 10)
   out <- partition(y, p = c(0.6, 0.2, 0.2))
