@@ -66,7 +66,7 @@ multi_strata <- function(df, num_cat = 3L) {
         # according to suggestion by @mayer79 here:
         # https://github.com/mayer79/splitTools/issues/13#issuecomment-1186096681
         breaks <- unique(stats::quantile(col, probs = probs, names = FALSE))
-        if (length(breaks) < length(probs)) {
+        if (length(breaks) < (length(probs) -1L)) {
           stop(sprintf(
             paste0("Computation of quantiles for column '%s' results in less ",
                    " groups (=%s) than the number of interaction groups ",
@@ -74,7 +74,7 @@ multi_strata <- function(df, num_cat = 3L) {
                    "Consider to change either the type of column '%s' to ",
                    "'factor' or reduce the number of interaction",
                    " groups (argument 'interact_grps')."
-            ), cn, length(breaks), length(probs), cn
+            ), cn, length(breaks), length(probs) -1L), cn
           ))
         }
         cut_obj <- cut(col, breaks, include.lowest = TRUE)
