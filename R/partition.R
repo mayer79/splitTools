@@ -38,11 +38,12 @@
 #' partition(y, p = c(0.7, 0.3), type = "grouped")
 #' partition(y, p = c(0.7, 0.3), type = "blocked")
 #'
-#' y_multi <- cbind(
-#'   rep(c(letters[1:4]), each = 5),
-#'   factor(sample(c(0, 1), 20, replace = TRUE)),
-#'   rnorm(20)
+#' y_multi <- data.frame(
+#'   rep(c(letters[1:4]), each = 100),
+#'   factor(sample(c(0, 1), 400, replace = TRUE)),
+#'   rnorm(400)
 #' )
+#' partition(y_multi, p = c(0.9, 0.1), multi_num_cat = 3)
 partition <- function(y, p,
                       type = c("stratified", "basic", "grouped", "blocked"),
                       n_bins = 10,
