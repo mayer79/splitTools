@@ -164,23 +164,23 @@ test_that("tiny data sets are providing non-empty partitions for grouped samplin
 test_that("patition based on multiple criteria", {
   set.seed(2)
   y_multi <- data.frame(
-    rep(c(letters[1:4]), each = 10),
-    factor(sample(c(0, 1), 40, replace = TRUE)),
-    rnorm(40)
+    rep(c(letters[1:4]), each = 100),
+    factor(sample(c(0, 1), 400, replace = TRUE)),
+    rnorm(400)
   )
   expect_message(
     partition(y_multi, p = c(train = 0.9, test = 0.1), seed = 2,
-              type = "stratified", multi_num_cat = 4),
+              type = "stratified", multi_num_cat = 3),
     regexp = "strata"
   )
   expect_message(
     partition(y_multi, p = c(train = 0.9, test = 0.1), seed = 2,
-              type = "basic", multi_num_cat = 4),
+              type = "basic", multi_num_cat = 3),
     regexp = "strata"
   )
   expect_message(
     partition(y_multi, p = c(train = 0.9, test = 0.1), seed = 2,
-              type = "grouped", multi_num_cat = 4),
+              type = "grouped", multi_num_cat = 3),
     regexp = "strata"
   )
 })
