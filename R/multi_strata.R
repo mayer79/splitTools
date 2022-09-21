@@ -44,7 +44,7 @@ multi_strata <- function(df, num_cat = 3L) {
 
   message(sprintf("The provided data.frame has %s columns ...", ncol(df)))
   y <- .strata(df = df, num_cat = num_cat)
-  message(sprintf("... resulting in %s strata.", nlevels(y)))
+  message(sprintf("... resulting in %s different groups.", nlevels(y)))
   return(y)
 }
 
