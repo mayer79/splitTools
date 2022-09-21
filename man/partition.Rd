@@ -12,11 +12,15 @@ partition(
   split_into_list = TRUE,
   use_names = TRUE,
   shuffle = FALSE,
+  multi_num_cat = NULL,
   seed = NULL
 )
 }
 \arguments{
-\item{y}{Either the variable used for "stratification" or "grouped" splits. For other types of splits, any vector of the same length as the data intended to split.}
+\item{y}{Either a vector or a data matrix. If a vector, the variable used for "stratification" or "grouped" splits. For other types of splits, any vector of
+the same length as the data intended to split.
+When providing a data matrix, interactions of all columns are computed on which the splitting is then performed (see Details). A data matrix also
+requires to define the argument \code{multi_num_cat}.}
 
 \item{p}{A vector with split probabilities per partition, e.g. c(train = 0.7, valid = 0.3). Names are passed to the output.}
 
@@ -30,6 +34,9 @@ partition(
 
 \item{shuffle}{Should row indices be randomly shuffled within partition? Default is \code{FALSE}. Shuffling is only possible when \code{split_into_list = TRUE}.}
 
+\item{multi_num_cat}{An integer to define the number of groups to categorize numeric variables when perform splitting on multiple criteria (Default: \code{NULL}).
+See Details for further information.}
+
 \item{seed}{Integer random seed.}
 }
 \value{
@@ -40,6 +47,11 @@ This function provides row indices for data splitting, e.g. into training, valid
 }
 \details{
 By default, the function uses stratified splitting. This will balance the partitions as good as possible regarding the distribution of the input vector \code{y}. Numeric input is first binned into \code{n_bins} quantile groups. If \code{type = "grouped"}, groups specified by \code{y} are kept together when splitting. This is relevant for clustered or panel data. In contrast to basic splitting, \code{type = "blocked"} does not sample indices at random, but rather keeps them in groups: e.g. the first 80\% of observations form a training set and the remaining 20\% are used for testing.
+
+When providing a data matrix with > 1 columns (e.g. data.frame, matrix, data.table), the interactions of these columns are calculated to define
+new 'groups' on which the splitting is then performed. This enables to stratify splitting by multiple criteria. While columns of a type other than \code{numeric}
+are passed unmodified to the function \code{interaction}, a vector of quantiles is computed for numeric variables to group / categorize the values before
+passing them further on. The number of categories to split numeric variables is to be provided with the argument \code{multi_num_cat}.
 }
 \examples{
 y <- rep(c(letters[1:4]), each = 5)
@@ -51,4 +63,13 @@ partition(y, p, split_into_list = FALSE, seed = 1)
 partition(y, p, split_into_list = FALSE, use_names = FALSE, seed = 1)
 partition(y, p = c(0.7, 0.3), type = "grouped")
 partition(y, p = c(0.7, 0.3), type = "blocked")
+
+y_multi <- cbind(
+  rep(c(letters[1:4]), each = 5),
+  factor(sample(c(0, 1), 20, replace = TRUE)),
+  rnorm(20)
+)
+}
+\seealso{
+\code{\link[=interaction]{interaction()}}, \code{\link[=quantile]{quantile()}}, \code{\link[=cut]{cut()}}
 }
