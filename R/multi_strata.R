@@ -66,7 +66,7 @@ multi_strata <- function(df, num_cat = 3L) {
         # according to suggestion by @mayer79 here:
         # https://github.com/mayer79/splitTools/issues/13#issuecomment-1186096681
         breaks <- unique(stats::quantile(col, probs = probs, names = FALSE))
-        if (length(breaks) < (length(probs) -1L)) {
+        if (length(breaks) < (length(probs) - 1L)) {
           stop(sprintf(
             paste0("Computation of quantiles for column '%s' results in less ",
                    " groups (=%s) than the number of interaction groups ",
@@ -74,18 +74,25 @@ multi_strata <- function(df, num_cat = 3L) {
                    "Consider to change either the type of column '%s' to ",
                    "'factor' or reduce the number of interaction",
                    " groups (argument 'interact_grps')."
-            ), cn, length(breaks), length(probs) -1L), cn
+            ), cn, length(breaks), (length(probs) - 1L), cn
           ))
         }
         cut_obj <- cut(col, breaks, include.lowest = TRUE)
         return(cut_obj)
-      } else {
+      } else if (is.factor(col) || is.character(col)) {
         return(df[[cn]])
+      } else {
+        return(NULL)
       }
     },
     simplify = FALSE, # return list that can be passed to `interaction`
     USE.NAMES = TRUE
   )
-  strata <- interaction(strata_var_list, drop = TRUE, sep = ":")
-  return(strata)
+  strata_var_list <- strata_var_list[!sapply(strata_var_list, is.null)]
+  if (length(strata_var_list) > 1L) {
+    strata <- interaction(strata_var_list, drop = TRUE, sep = ":")
+    return(strata)
+  } else {
+    stop("Not enough columns in 'df' to compute interactions with.")
+  }
 }
