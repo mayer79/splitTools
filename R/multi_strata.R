@@ -1,13 +1,15 @@
 #' Create strata from multiple features
 #'
 #' This function is a helper function to create strata based on multiple criteria,
-#'   which can then be used as input to the splitting functions.
+#'   i.e. the columns of a data.frame, which can then be used as input variable
+#'   to the splitting functions.
 #'
 #' @importFrom stats quantile
 #'
-#' @param df A data.frame. Interactions of all provided columns are computed on
-#'   which the splitting is then performed (see Details).
-#' @param num_cat An integer to define the number of groups to categorize
+#' @param df A data.frame. All columns of the provided data.frame are used to
+#'   compute strata using the defined \code{strategy} (see Details).
+#' @param strategy A character. The strategy to compute the strata (see Details).
+#' @param k An integer to define the number of groups to categorize
 #'   numeric variables when perform splitting on multiple criteria
 #'   (Default: \code{NULL}). See Details for further information.
 #'
@@ -18,11 +20,11 @@
 #' @details The interactions of all columns are calculated to define
 #'   \code{m} 'groups', which can be used to perform  the splitting on.
 #'   This enables splitting by multiple criteria. While columns of a type
-#'   other than \code{numeric} are passed unmodified to \code{interaction},
+#'   other than \code{numeric} are passed unmodified to \code{interaction()},
 #'   a vector of quantiles is computed for numeric variables to group /
 #'   categorize the values before passing them further on.
 #'   The number of categories to split numeric variables is to be provided
-#'   with the argument \code{multi_num_cat}.
+#'   with the argument \code{k}.
 #'
 #' @seealso [interaction()], [quantile()], [cut()]
 #'
@@ -33,30 +35,31 @@
 #'   factor(sample(c(0, 1), 400, replace = TRUE)),
 #'   rnorm(400)
 #' )
-#' multi_strata(y_multi, num_cat = 3)
-multi_strata <- function(df, num_cat = 3L) {
+#' multi_strata(y_multi, k = 3)
+multi_strata <- function(df, strategy = c("interaction"), k = 3L) {
+  strategy  <- match.arg(strategy)
   # Input checks
   stopifnot(
     !is.atomic(df) || ncol(df) > 1,
-    is.integer(as.integer(num_cat)) && num_cat > 1L,
+    is.integer(as.integer(k)) && k > 1L,
     is.data.frame(df)
   )
 
   message(sprintf("The provided data.frame has %s columns ...", ncol(df)))
-  y <- .strata(df = df, num_cat = num_cat)
+  y <- .strata(df = df, k = k)
   message(sprintf("... resulting in %s different groups.", nlevels(y)))
   return(y)
 }
 
-.strata <- function(df, num_cat) {
+.strata <- function(df, k) {
   stopifnot(
-    is.integer(as.integer(num_cat)),
-    num_cat > 1L
+    is.integer(as.integer(k)),
+    k > 1L
   )
   # +1 required as e.g. cutting a vector with breaks of length 5 results in
-  # 4 groups and users define with 'num_cat' the number of categories
+  # 4 groups and users define with 'k' the number of categories
   # for numeric variables
-  probs <- seq(0, 1, len = (as.integer(num_cat) + 1L))
+  probs <- seq(0, 1, len = (as.integer(k) + 1L))
 
   strata_var_list <- sapply(
     X = colnames(df),

@@ -6,18 +6,18 @@ test_that("calculate strata based on multiple criteria", {
     rnorm(400)
   )
   expect_message(
-    multi_strata(y_multi, num_cat = 3),
+    multi_strata(y_multi, k = 3),
     regexp = "different groups"
   )
 
   expect_error(
-    multi_strata(y_multi, num_cat = 1),
-    regexp = "num_cat > 1L is not TRUE"
+    multi_strata(y_multi, k = 1),
+    regexp = "k > 1L is not TRUE"
   )
 
   y_multi[, 2] <- as.numeric(as.character(y_multi[, 2]))
   expect_error(
-    multi_strata(y_multi, num_cat = 5),
+    multi_strata(y_multi, k = 5),
     regexp = "reduce the number"
   )
 
@@ -29,7 +29,7 @@ test_that("calculate strata based on multiple criteria", {
   )
 
   expect_error(
-    multi_strata(y_multi, num_cat = 3),
+    multi_strata(y_multi, k = 3),
     regexp = "Not enough columns"
   )
 })

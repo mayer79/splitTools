@@ -4,13 +4,15 @@
 \alias{multi_strata}
 \title{Create strata from multiple features}
 \usage{
-multi_strata(df, num_cat = 3L)
+multi_strata(df, strategy = c("interaction"), k = 3L)
 }
 \arguments{
-\item{df}{A data.frame. Interactions of all provided columns are computed on
-which the splitting is then performed (see Details).}
+\item{df}{A data.frame. All columns of the provided data.frame are used to
+compute strata using the defined \code{strategy} (see Details).}
 
-\item{num_cat}{An integer to define the number of groups to categorize
+\item{strategy}{A character. The strategy to compute the strata (see Details).}
+
+\item{k}{An integer to define the number of groups to categorize
 numeric variables when perform splitting on multiple criteria
 (Default: \code{NULL}). See Details for further information.}
 }
@@ -21,17 +23,18 @@ the splitting functions.
 }
 \description{
 This function is a helper function to create strata based on multiple criteria,
-which can then be used as input to the splitting functions.
+i.e. the columns of a data.frame, which can then be used as input variable
+to the splitting functions.
 }
 \details{
 The interactions of all columns are calculated to define
 \code{m} 'groups', which can be used to perform  the splitting on.
 This enables splitting by multiple criteria. While columns of a type
-other than \code{numeric} are passed unmodified to \code{interaction},
+other than \code{numeric} are passed unmodified to \code{interaction()},
 a vector of quantiles is computed for numeric variables to group /
 categorize the values before passing them further on.
 The number of categories to split numeric variables is to be provided
-with the argument \code{multi_num_cat}.
+with the argument \code{k}.
 }
 \examples{
 y_multi <- data.frame(
@@ -39,7 +42,7 @@ y_multi <- data.frame(
   factor(sample(c(0, 1), 400, replace = TRUE)),
   rnorm(400)
 )
-multi_strata(y_multi, num_cat = 3)
+multi_strata(y_multi, k = 3)
 }
 \seealso{
 \code{\link[=interaction]{interaction()}}, \code{\link[=quantile]{quantile()}}, \code{\link[=cut]{cut()}}
