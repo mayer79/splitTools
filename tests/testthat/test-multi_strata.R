@@ -13,3 +13,7 @@ test_that("Any strategy produces a factor", {
   expect_true(is.factor(multi_strata(y_multi, strategy = "kmeans", k = 4)))
   expect_true(is.factor(multi_strata(y_multi, strategy = "interaction", k = 4)))
 })
+
+test_that("strategy 'kmeans' produces k levels", {
+  expect_equal(nlevels(multi_strata(y_multi, strategy = "kmeans", k = 4)), 4)
+})

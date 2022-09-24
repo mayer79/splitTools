@@ -241,5 +241,29 @@ plot(x, dat$y, pch = ".", cex = 2)
 points(tail(x, length(test$y)), test$y, col = "red", pch = ".", cex = 2)
 lines(tail(x, length(test$y)), test_pred)
 
-
 ```
+
+## Stratification on multiple columns
+
+The helper function `multi_strata()` takes a data frame with multiple columns and turns it into a factor. Each level represents a stratification group containing (quite) similar rows. The factor can then be passed to `create_folds(, type = "stratified")` or `partition(, type = "stratified")` to produce (quite) balanced folds regarding these strata. 
+
+Two grouping strategies are offered:
+
+1. k-means clustering based on scaled input.
+2. All combinations of columns, where numeric input is being binned.
+
+Let's have a look at a simple example where we want to model "Sepal.Width" as a function of the other variables in the iris data set. We want to do a stratified train/valid/test split, aiming at being balanced regarding not only the response "Sepal.Width", but also regarding the important predictor "Species". In this case, we could use the following workflow:
+
+```{r}
+set.seed(3451)
+
+ir <- iris[c("Sepal.Length", "Species")]
+y <- multi_strata(ir, k = 5)
+inds <- partition(
+  y, p = c(train = 0.6, valid = 0.2, test = 0.2), split_into_list = FALSE
+)
+
+# Check
+by(ir, inds, summary)
+```
+
