@@ -1,35 +1,15 @@
-test_that("calculate strata based on multiple criteria", {
-  set.seed(2)
-  y_multi <- data.frame(
-    rep(c(letters[1:4]), each = 100),
-    factor(sample(c(0, 1), 400, replace = TRUE)),
-    rnorm(400)
-  )
-  expect_message(
-    multi_strata(y_multi, k = 3),
-    regexp = "different groups"
-  )
+set.seed(2)
+y_multi <- data.frame(
+  A = rep(c(letters[1:4]), each = 100),
+  B = factor(sample(c(0, 1), 400, replace = TRUE)),
+  C = rnorm(400)
+)
 
-  expect_error(
-    multi_strata(y_multi, k = 1),
-    regexp = "k > 1L is not TRUE"
-  )
+test_that("k = 1 raises an error", {
+  expect_error(multi_strata(y_multi, k = 1))
+})
 
-  y_multi[, 2] <- as.numeric(as.character(y_multi[, 2]))
-  expect_error(
-    multi_strata(y_multi, k = 5),
-    regexp = "reduce the number"
-  )
-
-  set.seed(2)
-  y_multi <- data.frame(
-    as.logical(sample(c(0, 1), 400, replace = TRUE)),
-    as.logical(sample(c(0, 1), 400, replace = TRUE)),
-    rnorm(400)
-  )
-
-  expect_error(
-    multi_strata(y_multi, k = 3),
-    regexp = "Not enough columns"
-  )
+test_that("Any strategy produces a factor", {
+  expect_true(is.factor(multi_strata(y_multi, strategy = "kmeans", k = 4)))
+  expect_true(is.factor(multi_strata(y_multi, strategy = "interaction", k = 4)))
 })

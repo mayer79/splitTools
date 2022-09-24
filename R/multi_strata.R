@@ -1,101 +1,95 @@
-#' Create strata from multiple features
+#' Create Strata from Multiple Features
 #'
 #' This function is a helper function to create strata based on multiple criteria,
-#'   i.e. the columns of a data.frame, which can then be used as input variable
-#'   to the splitting functions.
+#' i.e. the columns of a data.frame, which can then be used as input variable
+#' to the splitting functions. Currently, the function offers two strategies to create
+#' the strata, see Details.
 #'
-#' @importFrom stats quantile
+#' The default \code{strategy} to turn the columns of the data.frame into a one-dimensional
+#' stratification factor is "kmeans": It selects all numeric, logical, character, and
+#' factor columns, transforms them into a numeric matrix (ordered factors to integer,
+#' unordered factors or categoricals one-hot encoded), scales them and then runs a
+#' k-means cluster analysis aiming at \code{k} clusters. The \code{stategy} "interaction"
+#' selects the same columns. Then, it categorizes all numeric columns into approximately
+#' \code{k} bins. Then, all combinations of all columns are formed by calling
+#' \code{base::interaction()}.
 #'
 #' @param df A data.frame. All columns of the provided data.frame are used to
-#'   compute strata using the defined \code{strategy} (see Details).
-#' @param strategy A character. The strategy to compute the strata (see Details).
-#' @param k An integer to define the number of groups to categorize
-#'   numeric variables when perform splitting on multiple criteria
-#'   (Default: \code{NULL}). See Details for further information.
+#' compute strata using the defined \code{strategy} (see Details).
+#' @param strategy A character.
+#' The strategy (either "kmeans" or "interaction") to compute the strata (see Details).
+#' @param k An integer. For \code{strategy = "kmeans"}, it is the desired number of strata,
+#' while for \code{strategy = "interaction"}, it is the approximate number of bins per
+#' numeric feature before forming all combinations.
 #'
-#' @return A vector with \code{m} groups created using interactions between the
-#'   features from the provided data.frame that can be passed further on to
-#'   the splitting functions.
+#' @return A vector containing the strata as a factor that can be passed further on to
+#' the splitting functions.
 #'
-#' @details The interactions of all columns are calculated to define
-#'   \code{m} 'groups', which can be used to perform  the splitting on.
-#'   This enables splitting by multiple criteria. While columns of a type
-#'   other than \code{numeric} are passed unmodified to \code{interaction()},
-#'   a vector of quantiles is computed for numeric variables to group /
-#'   categorize the values before passing them further on.
-#'   The number of categories to split numeric variables is to be provided
-#'   with the argument \code{k}.
-#'
-#' @seealso [interaction()], [quantile()], [cut()]
+#' @seealso \code{\link{partition}}, \code{\link{create_folds}}.
 #'
 #' @export
 #' @examples
 #' y_multi <- data.frame(
-#'   rep(c(letters[1:4]), each = 100),
-#'   factor(sample(c(0, 1), 400, replace = TRUE)),
-#'   rnorm(400)
+#'   A = rep(c(letters[1:4]), each = 20),
+#'   B = factor(sample(c(0, 1), 80, replace = TRUE)),
+#'   c = rnorm(80)
 #' )
-#' multi_strata(y_multi, k = 3)
-multi_strata <- function(df, strategy = c("interaction"), k = 3L) {
-  strategy  <- match.arg(strategy)
-  # Input checks
-  stopifnot(
-    !is.atomic(df) || ncol(df) > 1,
-    is.integer(as.integer(k)) && k > 1L,
-    is.data.frame(df)
-  )
-
-  message(sprintf("The provided data.frame has %s columns ...", ncol(df)))
-  y <- .strata(df = df, k = k)
-  message(sprintf("... resulting in %s different groups.", nlevels(y)))
-  return(y)
+#' y <- multi_strata(y_multi, k = 3)
+#' folds <- create_folds(y, k = 5)
+multi_strata <- function(df, strategy = c("kmeans", "interaction"), k = 3L) {
+  strategy <- match.arg(strategy)
+  stopifnot(is.data.frame(df), k >= 2L, k <= nrow(df))
+  FUN <- switch(strategy, "kmeans" = .kmeans, "interaction" = .interaction)
+  FUN(.good_cols(df), k = k)
 }
 
-.strata <- function(df, k) {
-  stopifnot(
-    is.integer(as.integer(k)),
-    k > 1L
-  )
-  # +1 required as e.g. cutting a vector with breaks of length 5 results in
-  # 4 groups and users define with 'k' the number of categories
-  # for numeric variables
-  probs <- seq(0, 1, len = (as.integer(k) + 1L))
+#=======================
+# HELPER FUNCTION
+#=======================
 
-  strata_var_list <- sapply(
-    X = colnames(df),
-    FUN = function(cn) {
-      col <- df[[cn]]
-      if (is.numeric(col)) {
-        # according to suggestion by @mayer79 here:
-        # https://github.com/mayer79/splitTools/issues/13#issuecomment-1186096681
-        breaks <- unique(stats::quantile(col, probs = probs, names = FALSE))
-        if (length(breaks) < (length(probs) - 1L)) {
-          stop(sprintf(
-            paste0("Computation of quantiles for column '%s' results in less ",
-                   " groups (=%s) than the number of interaction groups ",
-                   "provided (=%s).\n",
-                   "Consider to change either the type of column '%s' to ",
-                   "'factor' or reduce the number of interaction",
-                   " groups (argument 'interact_grps')."
-            ), cn, length(breaks), (length(probs) - 1L), cn
-          ))
-        }
-        cut_obj <- cut(col, breaks, include.lowest = TRUE)
-        return(cut_obj)
-      } else if (is.factor(col) || is.character(col)) {
-        return(df[[cn]])
-      } else {
-        return(NULL)
-      }
-    },
-    simplify = FALSE, # return list that can be passed to `interaction`
-    USE.NAMES = TRUE
-  )
-  strata_var_list <- strata_var_list[!sapply(strata_var_list, is.null)]
-  if (length(strata_var_list) > 1L) {
-    strata <- interaction(strata_var_list, drop = TRUE, sep = ":")
-    return(strata)
-  } else {
-    stop("Not enough columns in 'df' to compute interactions with.")
+# Strategy: kmeans
+.kmeans <- function(df, k) {
+  # Treat ordered as numeric
+  v <- colnames(df)[vapply(df, is.ordered, FUN.VALUE = logical(1L))]
+  if (length(v) >= 1L) {
+    df[v] <- lapply(df[v], as.integer)
   }
+
+  # Now the real work
+  df <- scale(stats::model.matrix(~ . + 0, data = df))
+  factor(stats::kmeans(df, centers = k)$cluster)
+}
+
+# Strategy: interactions across all reasonable columns
+.interaction <- function(df, k) {
+  v <- colnames(df)[vapply(df, is.numeric, FUN.VALUE = logical(1L))]
+  if (length(v) >= 1L) {
+    df[v] <- lapply(df[v], .bin_pretty, n_bins = k)
+  }
+  interaction(df, drop = TRUE, sep = ":")
+}
+
+# Select reasonable columns
+.good_cols <- function(x) {
+  ok <- vapply(
+    x,
+    function(v)
+      is.factor(v) || is.character(v) || is.numeric(v) || is.logical(v),
+    FUN.VALUE = logical(1L)
+  )
+  v <- colnames(x)[ok]
+  if (length(v) == 0L) {
+    stop("No numeric, factor, character or logical columns in data")
+  }
+  x[v]
+}
+
+# Cuts x into quantile groups (like .bin, but with nice labels)
+.bin_pretty <- function(x, n_bins) {
+  # +1 required as e.g. cutting a vector with breaks of length 5 results in
+  # 4 groups and users define with 'num_cat' the number of categories
+  # for numeric variables
+  probs <- seq(0, 1, len = n_bins + 1L)
+  breaks <- unique(stats::quantile(x, probs = probs, names = FALSE))
+  cut(x, breaks, include.lowest = TRUE)
 }

@@ -2,48 +2,50 @@
 % Please edit documentation in R/multi_strata.R
 \name{multi_strata}
 \alias{multi_strata}
-\title{Create strata from multiple features}
+\title{Create Strata from Multiple Features}
 \usage{
-multi_strata(df, strategy = c("interaction"), k = 3L)
+multi_strata(df, strategy = c("kmeans", "interaction"), k = 3L)
 }
 \arguments{
 \item{df}{A data.frame. All columns of the provided data.frame are used to
 compute strata using the defined \code{strategy} (see Details).}
 
-\item{strategy}{A character. The strategy to compute the strata (see Details).}
+\item{strategy}{A character.
+The strategy (either "kmeans" or "interaction") to compute the strata (see Details).}
 
-\item{k}{An integer to define the number of groups to categorize
-numeric variables when perform splitting on multiple criteria
-(Default: \code{NULL}). See Details for further information.}
+\item{k}{An integer. For \code{strategy = "kmeans"}, it is the desired number of strata,
+while for \code{strategy = "interaction"}, it is the approximate number of bins per
+numeric feature before forming all combinations.}
 }
 \value{
-A vector with \code{m} groups created using interactions between the
-features from the provided data.frame that can be passed further on to
+A vector containing the strata as a factor that can be passed further on to
 the splitting functions.
 }
 \description{
 This function is a helper function to create strata based on multiple criteria,
 i.e. the columns of a data.frame, which can then be used as input variable
-to the splitting functions.
+to the splitting functions. Currently, the function offers two strategies to create
+the strata, see Details.
 }
 \details{
-The interactions of all columns are calculated to define
-\code{m} 'groups', which can be used to perform  the splitting on.
-This enables splitting by multiple criteria. While columns of a type
-other than \code{numeric} are passed unmodified to \code{interaction()},
-a vector of quantiles is computed for numeric variables to group /
-categorize the values before passing them further on.
-The number of categories to split numeric variables is to be provided
-with the argument \code{k}.
+The default \code{strategy} to turn the columns of the data.frame into a one-dimensional
+stratification factor is "kmeans": It selects all numeric, logical, character, and
+factor columns, transforms them into a numeric matrix (ordered factors to integer,
+unordered factors or categoricals one-hot encoded), scales them and then runs a
+k-means cluster analysis aiming at \code{k} clusters. The \code{stategy} "interaction"
+selects the same columns. Then, it categorizes all numeric columns into approximately
+\code{k} bins. Then, all combinations of all columns are formed by calling
+\code{base::interaction()}.
 }
 \examples{
 y_multi <- data.frame(
-  rep(c(letters[1:4]), each = 100),
-  factor(sample(c(0, 1), 400, replace = TRUE)),
-  rnorm(400)
+  A = rep(c(letters[1:4]), each = 20),
+  B = factor(sample(c(0, 1), 80, replace = TRUE)),
+  c = rnorm(80)
 )
-multi_strata(y_multi, k = 3)
+y <- multi_strata(y_multi, k = 3)
+folds <- create_folds(y, k = 5)
 }
 \seealso{
-\code{\link[=interaction]{interaction()}}, \code{\link[=quantile]{quantile()}}, \code{\link[=cut]{cut()}}
+\code{\link{partition}}, \code{\link{create_folds}}.
 }

@@ -7,6 +7,7 @@
 # 2) Increase package number in "use_description" below.
 # 3) Go through this script and carefully answer "no" if a "use_*" function
 #    asks to overwrite the existing files. Don't skip that function call.
+# devtools::load_all()
 
 library(usethis)
 
