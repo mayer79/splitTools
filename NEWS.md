@@ -1,3 +1,9 @@
+# splitTools 0.3.2.900 DEVEL
+
+## New Functionality
+
+- Sometimes, one need to stratify on multiple columns. The new function `multi_strata()` provides a vector of stratification groups based on a data frame that can be then passed to `partition()` or `create_folds()`. Each stratification group will contain "similar" data rows, where similarity is either based on a kmeans cluster analysis or forming all combinations of binned columns. Thanks to [kapsner](https://github.com/kapsner) for the idea and the help with the implementation.
+
 # splitTools 0.3.2
 
 This is documentation and maintenance update only with the following changes:

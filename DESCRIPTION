@@ -1,6 +1,6 @@
 Package: splitTools
 Title: Tools for Data Splitting
-Version: 0.3.2.9002
+Version: 0.3.2.900
 Authors@R: 
     person("Michael", "Mayer", , "mayermichael79@gmail.com", role = c("aut", "cre"))
 Description: Fast, lightweight toolkit for data splitting. Data sets can
@@ -19,8 +19,8 @@ Imports:
     stats
 Suggests: 
     knitr,
-    rmarkdown,
     ranger,
+    rmarkdown,
     testthat (>= 3.0.0)
 URL: https://github.com/mayer79/splitTools
 BugReports: https://github.com/mayer79/splitTools/issues
