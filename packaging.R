@@ -31,7 +31,7 @@ use_gpl_license(2)
 use_github_links() # use this if this project is on github
 
 # Your files that do not belong to the package itself (others are added by "use_* function")
-use_build_ignore(c("^packaging.R$", "[.]Rproj$", "^backlog$",
+use_build_ignore(c("^packaging.R$", "[.]Rproj$", "^backlog$", "^.github$", "^tic.R$",
                    "^cran-comments.md$", "^logo.png$"), escape = FALSE)
 
 # If your code uses the pipe operator %>%
