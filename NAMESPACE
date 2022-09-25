@@ -2,6 +2,7 @@
 
 export(create_folds)
 export(create_timefolds)
+export(multi_strata)
 export(partition)
 importFrom(stats,ave)
 importFrom(stats,quantile)
