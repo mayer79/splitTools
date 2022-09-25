@@ -5,7 +5,6 @@
 [![CRAN version](http://www.r-pkg.org/badges/version/splitTools)](https://cran.r-project.org/package=splitTools) [![](https://cranlogs.r-pkg.org/badges/splitTools)](https://cran.r-project.org/package=splitTools) [![](https://cranlogs.r-pkg.org/badges/grand-total/splitTools?color=orange)](https://cran.r-project.org/package=splitTools)
 [![Dependencies](https://tinyverse.netlify.com/badge/splitTools)](https://cran.r-project.org/package=splitTools)
 [![R build status](https://github.com/kapsner/splitTools/workflows/R%20CMD%20Check%20via%20{tic}/badge.svg?branch=main)](https://github.com/kapsner/splitTools/actions)
-[![R build status](https://github.com/kapsner/splitTools/workflows/lint/badge.svg?branch=main)](https://github.com/kapsner/splitTools/actions)
 [![R build status](https://github.com/kapsner/splitTools/workflows/test-coverage/badge.svg?branch=main)](https://github.com/kapsner/splitTools/actions)
 [![codecov](https://codecov.io/gh/kapsner/splitTools/branch/main/graph/badge.svg)](https://app.codecov.io/gh/kapsner/splitTools)
 <!-- badges: end -->
