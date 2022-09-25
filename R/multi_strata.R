@@ -26,7 +26,6 @@
 #' the splitting functions.
 #'
 #' @seealso \code{\link{partition}}, \code{\link{create_folds}}.
-#' @importFrom stats kmeans model.matrix
 #'
 #' @export
 #' @examples
