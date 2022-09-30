@@ -6,9 +6,9 @@
 ![CRAN downloads month](https://cranlogs.r-pkg.org/badges/splitTools)
 ![CRAN downloads overall](https://cranlogs.r-pkg.org/badges/grand-total/splitTools?color=orange)
 ![Dependencies](https://tinyverse.netlify.com/badge/splitTools)
-[![R build status](https://github.com/mayer79/splitTools/workflows/R%20CMD%20Check%20via%20{tic}/badge.svg?branch=main)](https://github.com/mayer79/splitTools/actions)
-[![R build status](https://github.com/mayer79/splitTools/workflows/test-coverage/badge.svg?branch=main)](https://github.com/mayer79/splitTools/actions)
-[![codecov](https://codecov.io/gh/mayer79/splitTools/branch/main/graph/badge.svg)](https://app.codecov.io/gh/mayer79/splitTools)
+[![R build status](https://github.com/mayer79/splitTools/workflows/R%20CMD%20Check%20via%20{tic}/badge.svg?branch=master)](https://github.com/mayer79/splitTools/actions)
+[![R build status](https://github.com/mayer79/splitTools/workflows/test-coverage/badge.svg?branch=master)](https://github.com/mayer79/splitTools/actions)
+[![codecov](https://codecov.io/gh/mayer79/splitTools/branch/master/graph/badge.svg)](https://app.codecov.io/gh/mayer79/splitTools)
 
 <!-- badges: end -->
 
