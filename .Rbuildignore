@@ -11,4 +11,4 @@
 ^Meta$
 ^CRAN-RELEASE$
 ^.github$
-^tic.R$
+^\.github$

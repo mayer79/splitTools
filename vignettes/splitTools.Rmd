@@ -22,9 +22,9 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-`splitTools` is a fast, lightweight toolkit for data splitting. 
+{splitTools} is a fast, lightweight toolkit for data splitting. 
 
-Its two main functions `partition` and `create_folds` support
+Its two main functions `partition()` and `create_folds()` support
 
 - data partitioning (e.g. into training, validation and test),
 
@@ -38,9 +38,9 @@ Its two main functions `partition` and `create_folds` support
 
 - blocked splitting (if the sequential order of the data should be retained).
 
-The function `create_timefolds` does time-series splitting where the out-of-sample data follows the (growing) in-sample data.
+The function `create_timefolds()` does time-series splitting where the out-of-sample data follows the (growing) in-sample data.
 
-We will now illustrate how to use `splitTools` in a typical modelling workflow.
+We will now illustrate how to use {splitTools} in a typical modelling workflow.
 
 ## Data partitioning
 
