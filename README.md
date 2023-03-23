@@ -1,20 +1,21 @@
-# splitTools <a href='https://github.com/mayer79/splitTools'><img src='man/figures/logo.png' align="right" height="138.5" /></a>
+# splitTools <a href='https://github.com/mayer79/splitTools'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
-[![CRAN version](http://www.r-pkg.org/badges/version/splitTools)](https://cran.r-project.org/package=splitTools) 
-![CRAN downloads month](https://cranlogs.r-pkg.org/badges/splitTools)
-![CRAN downloads overall](https://cranlogs.r-pkg.org/badges/grand-total/splitTools?color=orange)
-![Dependencies](https://tinyverse.netlify.com/badge/splitTools)
-[![R build status](https://github.com/mayer79/splitTools/workflows/R%20CMD%20Check%20via%20{tic}/badge.svg?branch=master)](https://github.com/mayer79/splitTools/actions)
-[![R build status](https://github.com/mayer79/splitTools/workflows/test-coverage/badge.svg?branch=master)](https://github.com/mayer79/splitTools/actions)
-[![codecov](https://codecov.io/gh/mayer79/splitTools/branch/master/graph/badge.svg)](https://app.codecov.io/gh/mayer79/splitTools)
+[![CRAN status](http://www.r-pkg.org/badges/version/splitTools)](https://cran.r-project.org/package=splitTools)
+[![R-CMD-check](https://github.com/mayer79/splitTools/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mayer79/splitTools/actions)
+[![Codecov test coverage](https://codecov.io/gh/mayer79/splitTools/branch/main/graph/badge.svg)](https://app.codecov.io/gh/mayer79/splitTools?branch=main)
+
+[![](https://cranlogs.r-pkg.org/badges/splitTools)](https://cran.r-project.org/package=splitTools) 
+[![](https://cranlogs.r-pkg.org/badges/grand-total/splitTools?color=orange)](https://cran.r-project.org/package=splitTools)
 
 <!-- badges: end -->
 
-`splitTools` is a toolkit for fast data splitting. It does not have any dependencies. 
+## Overview
 
-Its two main functions `partition` and `create_folds` support
+{splitTools} is a toolkit for fast data splitting. It does not have any dependencies. 
+
+Its two main functions `partition()` and `create_folds()` support
 
 - data partitioning (e.g. into training, validation and test),
 
@@ -30,23 +31,19 @@ Its two main functions `partition` and `create_folds` support
 
 The function `create_timefolds` does time-series splitting where the out-of-sample data follows the (extending or moving) in-sample data.
 
-The result of `create_folds` can be directly passed to the `folds` argument in cross-validation functions of XGBoost or LightGBM. Since these functions expect out-of-sample indices, 
-set the option `invert = TRUE`.
+The result of `create_folds()` can be directly passed to the `folds` argument in cross-validation functions of XGBoost or LightGBM. Since these functions expect out-of-sample indices, set the option `invert = TRUE`.
 
 ## Installation
 
-From CRAN:
-``` r
+```r
+# From CRAN
 install.packages("splitTools")
+
+# Development version
+devtools::install_github("mayer79/splitTools")
 ```
 
-Latest version from github:
-``` r
-library(devtools)
-install_github("mayer79/splitTools")
-```
-
-## Teaser
+## Usage
 
 ``` r
 library(splitTools)
@@ -104,3 +101,4 @@ str(inds <- create_timefolds(1:100, k = 5))
 # [...]
 ```
 
+For more details, check the vignette.

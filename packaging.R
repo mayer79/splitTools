@@ -15,7 +15,7 @@ library(usethis)
 use_description(
   fields = list(
     Title = "Tools for Data Splitting",
-    Version = "0.3.2.900",
+    Version = "0.3.3",
     Description = "Fast, lightweight toolkit for data splitting. Data sets can be partitioned into disjoint groups (e.g. into training, validation, and test) or into (repeated) k-folds for subsequent cross-validation. Besides basic splits, the package supports stratified, grouped as well as blocked splitting. Furthermore, cross-validation folds for time series data can be created. See e.g. Hastie et al. (2001) <doi:10.1007/978-0-387-84858-7> for the basic background on data partitioning and cross-validation.",
     `Authors@R` = "person('Michael', 'Mayer', email = 'mayermichael79@gmail.com', role = c('aut', 'cre'))",
     LazyData = NULL
@@ -59,6 +59,11 @@ use_logo("logo.png")
 # If package goes to CRAN: infos (check results etc.) for CRAN
 use_cran_comments()
 
+# Github actions
+use_github_action("document")
+use_github_action("check-standard")
+use_github_action("test-coverage")
+use_github_action("pkgdown")
 
 #=============================================================================
 # Finish package building (can use fresh session)
@@ -68,7 +73,7 @@ library(devtools)
 
 document()
 test()
-build_vignettes()
+# build_vignettes()
 check(manual = TRUE, cran = TRUE)
 build()
 # build(binary = TRUE)
