@@ -18,3 +18,7 @@ This is a small update, introducing a new utility function and a new README.
 * checking for detritus in the temp directory ... NOTE
 Found the following files/directories:
   'lastMiKTeXException'
+
+## Winbuilder
+
+Status: OK
