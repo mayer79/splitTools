@@ -147,7 +147,7 @@ test_that("tiny data sets are providing non-empty partitions for stratified samp
   y <- c("A", "A", "B")
   expect_message(partition(y, p = c(0.9, 0.1), seed = 1))
   expect_message(partition(y, p = c(0.9, 0.1, 0.2), seed = 10))
-  expect_message(partition(1:2, p = c(0.3, 0.3, 0.4), seed = 4))
+  suppressMessages(expect_message(partition(1:2, p = c(0.3, 0.3, 0.4), seed = 4)))
 })
 
 test_that("tiny data sets are providing non-empty partitions for basic sampling", {
@@ -160,8 +160,6 @@ test_that("tiny data sets are providing non-empty partitions for grouped samplin
   y <- c("A", "A", "B")
   expect_message(partition(y, p = c(0.9, 0.1), seed = 1, type = "grouped"))
 })
-
-partition(1:2, p = c(0.3, 0.3, 0.4), seed = 4)
 
 
 
