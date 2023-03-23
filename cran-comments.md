@@ -1,15 +1,20 @@
-This is a documentation/maintenance update only (see NEWS.md).
+Hello CRAN team
 
-The standard devtools::check(manual = TRUE, cran = TRUE) gave:
+This is a small update, introducing a new utility function and a new README.
 
-- 0 errors, 0 notes and the 1 (usual) warning about qpdf.
+## Checks seem okay
 
-Additionally checked with  
+## R-CMD-Check
 
-- check_win_devel()
-- check_rhub()
+❯ checking for unstated dependencies in examples ... OK
+   WARNING
+  'qpdf' is needed for checks on size reduction of PDFs
 
-with these (seemingly unproblematic) findings:
+❯ checking for future file timestamps ... NOTE
+  unable to verify current time
 
-- checking for detritus in the temp directory ... NOTE Found the following files/directories: 'lastMiKTeXException'
+## RHub
 
+* checking for detritus in the temp directory ... NOTE
+Found the following files/directories:
+  'lastMiKTeXException'
