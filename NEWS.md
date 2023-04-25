@@ -1,3 +1,8 @@
+# splitTools 1.0.0
+
+- Small maintenance update
+- Version 1.0.0 indicates maturity
+
 # splitTools 0.3.3
 
 ## New Functionality

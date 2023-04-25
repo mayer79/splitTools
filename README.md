@@ -1,4 +1,4 @@
-# splitTools <a href='https://github.com/mayer79/splitTools'><img src='man/figures/logo.png' align="right" height="139" /></a>
+# {splitTools} <a href='https://github.com/mayer79/splitTools'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
