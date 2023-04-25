@@ -8,7 +8,7 @@ partition(
   y,
   p,
   type = c("stratified", "basic", "grouped", "blocked"),
-  n_bins = 10,
+  n_bins = 10L,
   split_into_list = TRUE,
   use_names = TRUE,
   shuffle = FALSE,
@@ -16,30 +16,48 @@ partition(
 )
 }
 \arguments{
-\item{y}{Either the variable used for "stratification" or "grouped" splits. For other types of splits, any vector of the same length as the data intended to split.}
+\item{y}{Either the variable used for "stratification" or "grouped" splits.
+For other types of splits, any vector of the same length as the data intended to split.}
 
-\item{p}{A vector with split probabilities per partition, e.g. c(train = 0.7, valid = 0.3). Names are passed to the output.}
+\item{p}{A vector with split probabilities per partition, e.g.,
+c(train = 0.7, valid = 0.3). Names are passed to the output.}
 
-\item{type}{Split type. One of "stratified", "basic", "grouped", "blocked". The default is "stratified".}
+\item{type}{Split type. One of "stratified" (default), "basic", "grouped", "blocked".}
 
-\item{n_bins}{Approximate numbers of bins for numeric \code{y} and \code{type = "stratified"}.}
+\item{n_bins}{Approximate numbers of bins for numeric \code{y}
+(only for \code{type = "stratified"}).}
 
-\item{split_into_list}{Should the resulting partition vector be split into a list or not? Default is\code{TRUE}.}
+\item{split_into_list}{Should the resulting partition vector be split into a list?
+Default is\code{TRUE}.}
 
-\item{use_names}{Should names of \code{p} be used as partition names? Default is \code{TRUE}.}
+\item{use_names}{Should names of \code{p} be used as partition names?
+Default is \code{TRUE}.}
 
-\item{shuffle}{Should row indices be randomly shuffled within partition? Default is \code{FALSE}. Shuffling is only possible when \code{split_into_list = TRUE}.}
+\item{shuffle}{Should row indices be randomly shuffled within partition?
+Default is \code{FALSE}. Shuffling is only possible when \code{split_into_list = TRUE}.}
 
 \item{seed}{Integer random seed.}
 }
 \value{
-A list with row indices per partition (if \code{split_into_list = TRUE}) or a vector of partition ids.
+A list with row indices per partition (if \code{split_into_list = TRUE})
+or a vector of partition IDs.
 }
 \description{
-This function provides row indices for data splitting, e.g. into training, validation, and test. Different types of split strategies are supported ("basic", "stratified" (the default), "grouped", or "blocked"), see Details. The partition indices are either returned as a list with one element per partition (the default) or as vector of partition ids.
+This function provides row indices for data splitting, e.g., to split data
+into training, validation, and test. Different types of split strategies are
+supported, see Details.
+The partition indices are either returned as list with one element per partition
+(the default) or as vector of partition IDs.
 }
 \details{
-By default, the function uses stratified splitting. This will balance the partitions as good as possible regarding the distribution of the input vector \code{y}. Numeric input is first binned into \code{n_bins} quantile groups. If \code{type = "grouped"}, groups specified by \code{y} are kept together when splitting. This is relevant for clustered or panel data. In contrast to basic splitting, \code{type = "blocked"} does not sample indices at random, but rather keeps them in groups: e.g. the first 80\% of observations form a training set and the remaining 20\% are used for testing.
+By default, the function uses stratified splitting. This will balance the partitions
+as good as possible regarding the distribution of the input vector \code{y}.
+(Numeric input is first binned into \code{n_bins} quantile groups.)
+If \code{type = "grouped"}, groups specified by \code{y} are kept together when
+splitting. This is relevant for clustered or panel data.
+In contrast to basic splitting, \code{type = "blocked"} does not sample indices
+at random, but rather keeps them in groups: e.g., the first 80\% of observations form
+a training set and the remaining 20\% are used for testing.
 }
 \examples{
 y <- rep(c(letters[1:4]), each = 5)

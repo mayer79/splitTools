@@ -1,29 +1,21 @@
 #' Create Strata from Multiple Features
 #'
-#' This function is a helper function to create strata based on multiple criteria,
-#' i.e. the columns of a data.frame, which can then be used as input variable
-#' to the splitting functions. Currently, the function offers two strategies to create
-#' the strata, see Details.
+#' Creates a stratification vector based on multiple columns of
+#' a data.frame that can then be passed to the splitting functions.
+#' Currently, the function offers two strategies: "kmeans" runs a k-means
+#' cluster analysis on scaled input. (Ordered factors are integer encoded first,
+#' unordered factors and character columns are one-hot-encoded.)
+#' The second \code{stategy = "interaction"} creates all feature value
+#' combinations (after binning numeric columns into approximately \code{k} bins).
 #'
-#' The default \code{strategy} to turn the columns of the data.frame into a one-dimensional
-#' stratification factor is "kmeans": It selects all numeric, logical, character, and
-#' factor columns, transforms them into a numeric matrix (ordered factors to integer,
-#' unordered factors or categoricals one-hot encoded), scales them and then runs a
-#' k-means cluster analysis aiming at \code{k} clusters. The \code{stategy} "interaction"
-#' selects the same columns. Then, it categorizes all numeric columns into approximately
-#' \code{k} bins. Then, all combinations of all columns are formed by calling
-#' \code{base::interaction()}.
-#'
-#' @param df A data.frame. All columns of the provided data.frame are used to
-#' compute strata using the defined \code{strategy} (see Details).
-#' @param strategy A character.
-#' The strategy (either "kmeans" or "interaction") to compute the strata (see Details).
+#' @param df A \code{data.frame} used to form the stratification vector.
+#' @param strategy A string (either "kmeans" or "interaction") to compute the strata,
+#' see description.
 #' @param k An integer. For \code{strategy = "kmeans"}, it is the desired number of strata,
 #' while for \code{strategy = "interaction"}, it is the approximate number of bins per
 #' numeric feature before forming all combinations.
 #'
-#' @return A vector containing the strata as a factor that can be passed further on to
-#' the splitting functions.
+#' @return Factor with strata as levels.
 #'
 #' @seealso \code{\link{partition}}, \code{\link{create_folds}}.
 #'
