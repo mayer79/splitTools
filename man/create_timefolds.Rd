@@ -25,14 +25,14 @@ This function provides a list with in- and out-of-sample indices per fold used f
 time series k-fold cross-validation, see Details.
 }
 \details{
-The data is first partitioned into k+1 sequential blocks B_1 to B_{k+1}.
+The data is first partitioned into k+1 sequential blocks \eqn{B_1} to \eqn{B_{k+1}}.
 Each fold consists of two index vectors: one with in-sample row numbers,
-the other with out-of-sample row numbers. The first fold uses B_1 as in-sample
-and B_2 as out-of-sample data. The second one uses either B_2
-(if \code{type = "moving"}) or {B_1, B_2} (if \code{type = "extending"})
-as in-sample, and B_3 as out-of-sample data etc. Finally, the kth fold uses
-{B_1, ..., B_k} ("extending") or B_k ("moving") as in-sample data, and B_{k+1}
-as out-of-sample data. This makes sure that out-of-sample data always
+the other with out-of-sample row numbers. The first fold uses \eqn{B_1} as in-sample
+and \eqn{B_2} as out-of-sample data. The second one uses either \eqn{B_2}
+(if \code{type = "moving"}) or \eqn{\{B_1, B_2\}} (if \code{type = "extending"})
+as in-sample, and \eqn{B_3} as out-of-sample data etc. Finally, the k-th fold uses
+\eqn{\{B_1, ..., B_k\}} ("extending") or \eqn{B_k} ("moving") as in-sample data,
+and \eqn{B_{k+1}} as out-of-sample data. This makes sure that out-of-sample data always
 follows in-sample data.
 }
 \examples{
