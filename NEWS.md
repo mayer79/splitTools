@@ -1,7 +1,8 @@
 # splitTools 1.0.0
 
-- Small maintenance update
-- Version 1.0.0 indicates maturity
+- Documentation update
+- Push the package to mature version 1.0.0.
+- Replacing `importFrom` by `::`.
 
 # splitTools 0.3.3
 
