@@ -1,6 +1,6 @@
 Package: splitTools
 Title: Tools for Data Splitting
-Version: 0.3.3
+Version: 1.0.0
 Authors@R: 
     person("Michael", "Mayer", , "mayermichael79@gmail.com", role = c("aut", "cre"))
 Description: Fast, lightweight toolkit for data splitting. Data sets can

@@ -1,3 +1,9 @@
+# splitTools 1.0.0
+
+- Documentation update
+- Push the package to mature version 1.0.0.
+- Replacing `importFrom` by `::`.
+
 # splitTools 0.3.3
 
 ## New Functionality

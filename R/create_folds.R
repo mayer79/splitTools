@@ -1,18 +1,31 @@
 #' Create Folds
 #'
-#' This function provides a list of row indices used for k-fold cross-validation (basic, stratified, grouped, or blocked). Repeated fold creation is supported as well.
+#' This function provides a list of row indices used for k-fold cross-validation
+#' (basic, stratified, grouped, or blocked). Repeated fold creation is supported as well.
 #'
-#' By default, the function uses stratified splitting. This will balance the folds regarding the distribution of the input vector \code{y}. Numeric input is first binned into \code{n_bins} quantile groups. If \code{type = "grouped"}, groups specified by \code{y} are kept together when splitting. This is relevant for clustered or panel data. In contrast to basic splitting, \code{type = "blocked"} does not sample indices at random, but rather keeps them in sequential groups.
-#' @param y Either the variable used for "stratification" or "grouped" splits. For other types of splits, any vector of the same length as the data intended to split.
+#' By default, the function uses stratified splitting. This will balance the folds
+#' regarding the distribution of the input vector \code{y}.
+#' (Numeric input is first binned into \code{n_bins} quantile groups.)
+#' If \code{type = "grouped"}, groups specified by \code{y} are kept together
+#' when splitting. This is relevant for clustered or panel data.
+#' In contrast to basic splitting, \code{type = "blocked"} does not sample
+#' indices at random, but rather keeps them in sequential groups.
+#' @param y Vector used for "stratification" or "grouped" splits.
+#' For other types of splits, any vector of the same length as the data intended to split.
 #' @param k Number of folds.
-#' @param type Split type. One of "stratified", "basic", "grouped", "blocked". The default is "stratified".
-#' @param n_bins Approximate numbers of bins for numeric \code{y} and \code{type = "stratified"}.
-#' @param m_rep How many times should the data be split into k folds? Default is 1, i.e. no repetitions.
+#' @param type Split type. One of "stratified" (default), "basic", "grouped", "blocked".
+#' @param n_bins Approximate numbers of bins for numeric \code{y}
+#' (only for \code{type = "stratified"}).
+#' @param m_rep How many times should the data be split into k folds?
+#' Default is 1, i.e., no repetitions.
 #' @param use_names Should folds be named? Default is \code{TRUE}.
-#' @param invert Set to \code{TRUE} in order to receive out-of-sample indices. Default is \code{FALSE}, i.e. in-sample indices are returned.
-#' @param shuffle Should row indices be randomly shuffled within folds? Default is \code{FALSE}.
+#' @param invert Set to \code{TRUE} in order to receive out-of-sample indices.
+#' Default is \code{FALSE}, i.e., in-sample indices are returned.
+#' @param shuffle Should row indices be randomly shuffled within folds?
+#' Default is \code{FALSE}.
 #' @param seed Integer random seed.
-#' @return If \code{invert = FALSE} (the default), a list with in-sample row indices. If \code{invert = TRUE}, a list with out-of-sample indices.
+#' @return If \code{invert = FALSE} (the default), a list with in-sample row indices.
+#' If \code{invert = TRUE}, a list with out-of-sample indices.
 #' @export
 #' @examples
 #' y <- rep(c(letters[1:4]), each = 5)
@@ -20,18 +33,21 @@
 #' create_folds(y, k = 2)
 #' create_folds(y, k = 2, m_rep = 2)
 #' create_folds(y, k = 3, type = "blocked")
-create_folds <- function(y, k = 5,
+create_folds <- function(y, k = 5L,
                          type = c("stratified", "basic", "grouped", "blocked"),
-                         n_bins = 10, m_rep = 1, use_names = TRUE,
+                         n_bins = 10L, m_rep = 1L, use_names = TRUE,
                          invert = FALSE, shuffle = FALSE, seed = NULL) {
   # Input checks
   type <- match.arg(type)
-  stopifnot(is.atomic(y), length(y) >= 2L,
-            k >= 2,
-            m_rep >= 1)
-  if (type == "blocked" && m_rep > 1) {
+  stopifnot(
+    is.atomic(y),
+    length(y) >= 2L,
+    k >= 2L,
+    m_rep >= 1L
+  )
+  if (type == "blocked" && m_rep > 1L) {
     message("Repeated blocked cross-validation will return the same indices for each repetition. Setting m_rep = 1...")
-    m_rep <- 1
+    m_rep <- 1L
   }
 
   # Initializations
@@ -39,13 +55,19 @@ create_folds <- function(y, k = 5,
     set.seed(seed)
   }
   p <- rep(1 / k, times = k)
-  if (use_names && m_rep > 1) {
+  if (use_names && m_rep > 1L) {
     sfx <- .names("Rep", seq_len(m_rep))
   }
-  f <- function(i = 1) {
-    res <- partition(y = y, p = p, type = type, n_bins = n_bins,
-                     split_into_list = TRUE, use_names = FALSE,
-                     shuffle = shuffle)
+  f <- function(i = 1L) {
+    res <- partition(
+      y = y,
+      p = p,
+      type = type,
+      n_bins = n_bins,
+      split_into_list = TRUE,
+      use_names = FALSE,
+      shuffle = shuffle
+    )
     if (!invert) {
       if (shuffle) {
         res <- lapply(seq_along(res), function(i) unlist(res[-i], use.names = FALSE))
@@ -55,7 +77,7 @@ create_folds <- function(y, k = 5,
     }
     if (use_names) {
       names(res) <- .names("Fold", seq_along(res))
-      if (m_rep > 1) {
+      if (m_rep > 1L) {
         names(res) <- paste(names(res), sfx[i], sep = ".")
       }
     } else {

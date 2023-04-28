@@ -4,7 +4,7 @@
 \alias{create_timefolds}
 \title{Creates Folds for Time Series Data}
 \usage{
-create_timefolds(y, k = 5, use_names = TRUE, type = c("extending", "moving"))
+create_timefolds(y, k = 5L, use_names = TRUE, type = c("extending", "moving"))
 }
 \arguments{
 \item{y}{Any vector of the same length as the data intended to split.}
@@ -13,16 +13,27 @@ create_timefolds(y, k = 5, use_names = TRUE, type = c("extending", "moving"))
 
 \item{use_names}{Should folds be named? Default is \code{TRUE}.}
 
-\item{type}{Should in-sample data be "extending" over the folds (default) or consist of one single fold ("moving")?}
+\item{type}{Should in-sample data be "extending" over the folds (default)
+or consist of one single fold ("moving")?}
 }
 \value{
-A nested list with in-sample ("insample") and out-of-sample ("outsample") indices per fold.
+A nested list with in-sample ("insample") and out-of-sample ("outsample")
+indices per fold.
 }
 \description{
-This function provides a list with in- and out-of-sample indices per fold used for time series k-fold cross-validation, see Details.
+This function provides a list with in- and out-of-sample indices per fold used for
+time series k-fold cross-validation, see Details.
 }
 \details{
-The data is first partitioned into k+1 sequential blocks B_1 to B_{k+1}. Each fold consists of two index vectors: one with in-sample row numbers, the other with out-of-sample row numbers. The first fold uses B_1 as in-sample and B_2 as out-of-sample data. The second one uses either B_2 (if \code{type = "extending"}) or {B_1, B_2} (if \code{type = "moving"}) as in-sample and B_3 as out-of-sample data etc. until the kth fold with {B_1, ..., B_k} ("extending") resp. B_k ("moving") as in-sample and B_{k+1} as out-of-sample data. This makes sure that out-of-sample data always follows in-sample data.
+The data is first partitioned into k+1 sequential blocks \eqn{B_1} to \eqn{B_{k+1}}.
+Each fold consists of two index vectors: one with in-sample row numbers,
+the other with out-of-sample row numbers. The first fold uses \eqn{B_1} as in-sample
+and \eqn{B_2} as out-of-sample data. The second one uses either \eqn{B_2}
+(if \code{type = "moving"}) or \eqn{\{B_1, B_2\}} (if \code{type = "extending"})
+as in-sample, and \eqn{B_3} as out-of-sample data etc. Finally, the k-th fold uses
+\eqn{\{B_1, ..., B_k\}} ("extending") or \eqn{B_k} ("moving") as in-sample data,
+and \eqn{B_{k+1}} as out-of-sample data. This makes sure that out-of-sample data always
+follows in-sample data.
 }
 \examples{
 y <- runif(100)

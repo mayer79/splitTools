@@ -1,24 +1,21 @@
-Hello CRAN team
+Dear CRAN team
 
-This is a small update, introducing a new utility function and a new README.
+This is mainly a documentation update, pushing the package to mature version 1.0.0.
 
 ## Checks seem okay
 
-## R-CMD-Check
+### R-CMD-Check
 
-❯ checking for unstated dependencies in examples ... OK
-   WARNING
-  'qpdf' is needed for checks on size reduction of PDFs
+- WARNING: 'qpdf' is needed for checks on size reduction of PDFs
 
-❯ checking for future file timestamps ... NOTE
-  unable to verify current time
+- NOTE: Skipping checking HTML validation: no command 'tidy' found
 
-## RHub
+### RHub
 
-* checking for detritus in the temp directory ... NOTE
-Found the following files/directories:
-  'lastMiKTeXException'
+- NOTE: package 'V8' unavailable
 
-## Winbuilder
+- NOTE: lastMiKTeXException
 
-Status: OK
+### Winbuilder
+
+OK
