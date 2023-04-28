@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">splitTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.3.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -51,7 +51,13 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.3.3" id="splittools-033">splitTools 0.3.3<a class="anchor" aria-label="anchor" href="#splittools-033"></a></h2>
+<h2 class="page-header" data-toc-text="1.0.0" id="splittools-100">splitTools 1.0.0<small>2023-04-28</small><a class="anchor" aria-label="anchor" href="#splittools-100"></a></h2>
+<ul><li>Documentation update</li>
+<li>Push the package to mature version 1.0.0.</li>
+<li>Replacing <code>importFrom</code> by <code>::</code>.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.3.3" id="splittools-033">splitTools 0.3.3<small>2023-03-23</small><a class="anchor" aria-label="anchor" href="#splittools-033"></a></h2>
 <div class="section level3">
 <h3 id="new-functionality-0-3-3">New Functionality<a class="anchor" aria-label="anchor" href="#new-functionality-0-3-3"></a></h3>
 <ul><li>Sometimes, one need to stratify on multiple columns. The new function <code><a href="../reference/multi_strata.html">multi_strata()</a></code> provides a vector of stratification groups based on a data frame that can be then passed to <code><a href="../reference/partition.html">partition()</a></code> or <code><a href="../reference/create_folds.html">create_folds()</a></code>. Each stratification group will contain “similar” data rows, where similarity is either based on a kmeans cluster analysis or forming all combinations of binned columns. Thanks to <a href="https://github.com/kapsner" class="external-link">kapsner</a> for the idea and the help with the implementation.</li>
