@@ -17,8 +17,9 @@ create_folds(
 )
 }
 \arguments{
-\item{y}{Vector used for "stratification" or "grouped" splits.
-For other types of splits, any vector of the same length as the data intended to split.}
+\item{y}{Either the variable used for "stratification" or "grouped" splits.
+For other types of splits, any vector of the same length as the data
+intended to split.}
 
 \item{k}{Number of folds.}
 

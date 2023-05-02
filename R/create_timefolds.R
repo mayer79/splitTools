@@ -3,22 +3,24 @@
 #' This function provides a list with in- and out-of-sample indices per fold used for
 #' time series k-fold cross-validation, see Details.
 #'
-#' The data is first partitioned into k+1 sequential blocks \eqn{B_1} to \eqn{B_{k+1}}.
-#' Each fold consists of two index vectors: one with in-sample row numbers,
+#' The data is first partitioned into \eqn{k+1} sequential blocks \eqn{B_1} to
+#' \eqn{B_{k+1}}. Each fold consists of two index vectors: one with in-sample row numbers,
 #' the other with out-of-sample row numbers. The first fold uses \eqn{B_1} as in-sample
 #' and \eqn{B_2} as out-of-sample data. The second one uses either \eqn{B_2}
-#' (if \code{type = "moving"}) or \eqn{\{B_1, B_2\}} (if \code{type = "extending"})
-#' as in-sample, and \eqn{B_3} as out-of-sample data etc. Finally, the k-th fold uses
+#' (if `type = "moving"`) or \eqn{\{B_1, B_2\}} (if `type = "extending"`)
+#' as in-sample, and \eqn{B_3} as out-of-sample data etc. Finally, the kth fold uses
 #' \eqn{\{B_1, ..., B_k\}} ("extending") or \eqn{B_k} ("moving") as in-sample data,
-#' and \eqn{B_{k+1}} as out-of-sample data. This makes sure that out-of-sample data always
-#' follows in-sample data.
+#' and \eqn{B_{k+1}} as out-of-sample data. This makes sure that out-of-sample data
+#' always follows in-sample data.
+#'
 #' @param y Any vector of the same length as the data intended to split.
 #' @param k Number of folds.
-#' @param use_names Should folds be named? Default is \code{TRUE}.
+#' @param use_names Should folds be named? Default is `TRUE`.
 #' @param type Should in-sample data be "extending" over the folds (default)
-#' or consist of one single fold ("moving")?
-#' @return A nested list with in-sample ("insample") and out-of-sample ("outsample")
-#' indices per fold.
+#'   or consist of one single fold ("moving")?
+#' @returns
+#'   A nested list with in-sample ("insample") and out-of-sample ("outsample")
+#'   indices per fold.
 #' @export
 #' @examples
 #' y <- runif(100)

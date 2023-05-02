@@ -17,10 +17,11 @@ partition(
 }
 \arguments{
 \item{y}{Either the variable used for "stratification" or "grouped" splits.
-For other types of splits, any vector of the same length as the data intended to split.}
+For other types of splits, any vector of the same length as the data
+intended to split.}
 
 \item{p}{A vector with split probabilities per partition, e.g.,
-c(train = 0.7, valid = 0.3). Names are passed to the output.}
+\code{c(train = 0.7, valid = 0.3)}. Names are passed to the output.}
 
 \item{type}{Split type. One of "stratified" (default), "basic", "grouped", "blocked".}
 

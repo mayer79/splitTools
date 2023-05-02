@@ -38,5 +38,5 @@ y <- multi_strata(y_multi, k = 3)
 folds <- create_folds(y, k = 5)
 }
 \seealso{
-\code{\link{partition}}, \code{\link{create_folds}}.
+\code{\link[=partition]{partition()}}, \code{\link[=create_folds]{create_folds()}}
 }

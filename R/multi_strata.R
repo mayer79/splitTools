@@ -5,20 +5,17 @@
 #' Currently, the function offers two strategies: "kmeans" runs a k-means
 #' cluster analysis on scaled input. (Ordered factors are integer encoded first,
 #' unordered factors and character columns are one-hot-encoded.)
-#' The second \code{stategy = "interaction"} creates all feature value
-#' combinations (after binning numeric columns into approximately \code{k} bins).
+#' The second `stategy = "interaction"` creates all feature value
+#' combinations (after binning numeric columns into approximately `k` bins).
 #'
-#' @param df A \code{data.frame} used to form the stratification vector.
+#' @param df A `data.frame` used to form the stratification vector.
 #' @param strategy A string (either "kmeans" or "interaction") to compute the strata,
-#' see description.
-#' @param k An integer. For \code{strategy = "kmeans"}, it is the desired number of strata,
-#' while for \code{strategy = "interaction"}, it is the approximate number of bins per
-#' numeric feature before forming all combinations.
-#'
-#' @return Factor with strata as levels.
-#'
-#' @seealso \code{\link{partition}}, \code{\link{create_folds}}.
-#'
+#'   see description.
+#' @param k An integer. For `strategy = "kmeans"`, it is the desired number of strata,
+#'   while for `strategy = "interaction"`, it is the approximate number of bins per
+#'   numeric feature before forming all combinations.
+#' @returns Factor with strata as levels.
+#' @seealso [partition()], [create_folds()]
 #' @export
 #' @examples
 #' y_multi <- data.frame(
@@ -36,7 +33,7 @@ multi_strata <- function(df, strategy = c("kmeans", "interaction"), k = 3L) {
 }
 
 #=======================
-# HELPER FUNCTION
+# HELPER FUNCTIONS
 #=======================
 
 # Strategy: kmeans
