@@ -1,3 +1,7 @@
+# splitTools 1.0.1
+
+- Documentation update
+
 # splitTools 1.0.0
 
 - Documentation update
