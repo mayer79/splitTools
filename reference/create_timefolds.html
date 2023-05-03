@@ -18,7 +18,7 @@ time series k-fold cross-validation, see Details."><meta property="og:image" con
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">splitTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
       </span>
     </div>
 
@@ -89,15 +89,15 @@ indices per fold.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>The data is first partitioned into k+1 sequential blocks \(B_1\) to \(B_{k+1}\).
-Each fold consists of two index vectors: one with in-sample row numbers,
+    <p>The data is first partitioned into \(k+1\) sequential blocks \(B_1\) to
+\(B_{k+1}\). Each fold consists of two index vectors: one with in-sample row numbers,
 the other with out-of-sample row numbers. The first fold uses \(B_1\) as in-sample
 and \(B_2\) as out-of-sample data. The second one uses either \(B_2\)
 (if <code>type = "moving"</code>) or \(\{B_1, B_2\}\) (if <code>type = "extending"</code>)
-as in-sample, and \(B_3\) as out-of-sample data etc. Finally, the k-th fold uses
+as in-sample, and \(B_3\) as out-of-sample data etc. Finally, the kth fold uses
 \(\{B_1, ..., B_k\}\) ("extending") or \(B_k\) ("moving") as in-sample data,
-and \(B_{k+1}\) as out-of-sample data. This makes sure that out-of-sample data always
-follows in-sample data.</p>
+and \(B_{k+1}\) as out-of-sample data. This makes sure that out-of-sample data
+always follows in-sample data.</p>
     </div>
 
     <div id="ref-examples">
