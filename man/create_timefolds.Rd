@@ -17,8 +17,7 @@ create_timefolds(y, k = 5L, use_names = TRUE, type = c("extending", "moving"))
 or consist of one single fold ("moving")?}
 }
 \value{
-A nested list with in-sample ("insample") and out-of-sample ("outsample")
-indices per fold.
+A nested list with in-sample and out-of-sample indices per fold.
 }
 \description{
 This function provides a list with in- and out-of-sample indices per fold used for
@@ -40,4 +39,7 @@ y <- runif(100)
 create_timefolds(y)
 create_timefolds(y, use_names = FALSE)
 create_timefolds(y, use_names = FALSE, type = "moving")
+}
+\seealso{
+\code{\link[=partition]{partition()}}, \code{\link[=create_folds]{create_folds()}}
 }

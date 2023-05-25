@@ -24,7 +24,7 @@
 #' @param n_bins Approximate numbers of bins for numeric `y`
 #'   (only for `type = "stratified"`).
 #' @param split_into_list Should the resulting partition vector be split into a list?
-#'   Default is`TRUE`.
+#'   Default is `TRUE`.
 #' @param use_names Should names of `p` be used as partition names?
 #'   Default is `TRUE`.
 #' @param shuffle Should row indices be randomly shuffled within partition?
@@ -44,6 +44,7 @@
 #' partition(y, p, split_into_list = FALSE, use_names = FALSE, seed = 1)
 #' partition(y, p = c(0.7, 0.3), type = "grouped")
 #' partition(y, p = c(0.7, 0.3), type = "blocked")
+#' @seealso [create_folds()]
 partition <- function(y, p,
                       type = c("stratified", "basic", "grouped", "blocked"),
                       n_bins = 10L, split_into_list = TRUE, use_names = TRUE,
