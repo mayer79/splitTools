@@ -2,6 +2,7 @@
 #'
 #' This function provides a list of row indices used for k-fold cross-validation
 #' (basic, stratified, grouped, or blocked). Repeated fold creation is supported as well.
+#' By default, in-sample indices are returned.
 #'
 #' By default, the function uses stratified splitting. This will balance the folds
 #' regarding the distribution of the input vector `y`.
@@ -29,6 +30,7 @@
 #' create_folds(y, k = 2)
 #' create_folds(y, k = 2, m_rep = 2)
 #' create_folds(y, k = 3, type = "blocked")
+#' @seealso [partition()], [create_timefolds()]
 create_folds <- function(y, k = 5L,
                          type = c("stratified", "basic", "grouped", "blocked"),
                          n_bins = 10L, m_rep = 1L, use_names = TRUE,

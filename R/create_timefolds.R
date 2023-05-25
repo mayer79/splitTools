@@ -19,14 +19,14 @@
 #' @param type Should in-sample data be "extending" over the folds (default)
 #'   or consist of one single fold ("moving")?
 #' @returns
-#'   A nested list with in-sample ("insample") and out-of-sample ("outsample")
-#'   indices per fold.
+#'   A nested list with in-sample and out-of-sample indices per fold.
 #' @export
 #' @examples
 #' y <- runif(100)
 #' create_timefolds(y)
 #' create_timefolds(y, use_names = FALSE)
 #' create_timefolds(y, use_names = FALSE, type = "moving")
+#' @seealso [partition()], [create_folds()]
 create_timefolds <- function(y, k = 5L, use_names = TRUE,
                              type = c("extending", "moving")) {
   # Input checks

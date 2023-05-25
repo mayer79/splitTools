@@ -1,12 +1,14 @@
 #' Create Strata from Multiple Features
 #'
+#' @description
 #' Creates a stratification vector based on multiple columns of
-#' a data.frame that can then be passed to the splitting functions.
-#' Currently, the function offers two strategies: "kmeans" runs a k-means
-#' cluster analysis on scaled input. (Ordered factors are integer encoded first,
-#' unordered factors and character columns are one-hot-encoded.)
-#' The second `stategy = "interaction"` creates all feature value
-#' combinations (after binning numeric columns into approximately `k` bins).
+#' a `data.frame` that can then be passed to the splitting functions.
+#'
+#' Currently, the function offers two strategies to create the strata:
+#' - "kmeans": k-means cluster analysis on scaled input. (Ordered factors are integer
+#'   encoded first, unordered factors and character columns are one-hot-encoded.)
+#' - "interaction": All combinations (after binning numeric columns into
+#'   approximately `k` bins).
 #'
 #' @param df A `data.frame` used to form the stratification vector.
 #' @param strategy A string (either "kmeans" or "interaction") to compute the strata,
@@ -15,7 +17,6 @@
 #'   while for `strategy = "interaction"`, it is the approximate number of bins per
 #'   numeric feature before forming all combinations.
 #' @returns Factor with strata as levels.
-#' @seealso [partition()], [create_folds()]
 #' @export
 #' @examples
 #' y_multi <- data.frame(
@@ -25,6 +26,7 @@
 #' )
 #' y <- multi_strata(y_multi, k = 3)
 #' folds <- create_folds(y, k = 5)
+#' @seealso [partition()], [create_folds()]
 multi_strata <- function(df, strategy = c("kmeans", "interaction"), k = 3L) {
   strategy <- match.arg(strategy)
   stopifnot(is.data.frame(df), k >= 2L, k <= nrow(df))

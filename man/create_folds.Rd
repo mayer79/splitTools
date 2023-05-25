@@ -48,6 +48,7 @@ If \code{invert = TRUE}, a list with out-of-sample indices.
 \description{
 This function provides a list of row indices used for k-fold cross-validation
 (basic, stratified, grouped, or blocked). Repeated fold creation is supported as well.
+By default, in-sample indices are returned.
 }
 \details{
 By default, the function uses stratified splitting. This will balance the folds
@@ -64,4 +65,7 @@ create_folds(y)
 create_folds(y, k = 2)
 create_folds(y, k = 2, m_rep = 2)
 create_folds(y, k = 3, type = "blocked")
+}
+\seealso{
+\code{\link[=partition]{partition()}}, \code{\link[=create_timefolds]{create_timefolds()}}
 }

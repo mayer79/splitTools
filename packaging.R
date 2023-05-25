@@ -24,7 +24,6 @@ use_description(
 )
 
 use_package("stats", "Imports")
-use_package("ranger", "Suggests")
 
 use_gpl_license(2)
 

@@ -21,12 +21,15 @@ Factor with strata as levels.
 }
 \description{
 Creates a stratification vector based on multiple columns of
-a data.frame that can then be passed to the splitting functions.
-Currently, the function offers two strategies: "kmeans" runs a k-means
-cluster analysis on scaled input. (Ordered factors are integer encoded first,
-unordered factors and character columns are one-hot-encoded.)
-The second \code{stategy = "interaction"} creates all feature value
-combinations (after binning numeric columns into approximately \code{k} bins).
+a \code{data.frame} that can then be passed to the splitting functions.
+
+Currently, the function offers two strategies to create the strata:
+\itemize{
+\item "kmeans": k-means cluster analysis on scaled input. (Ordered factors are integer
+encoded first, unordered factors and character columns are one-hot-encoded.)
+\item "interaction": All combinations (after binning numeric columns into
+approximately \code{k} bins).
+}
 }
 \examples{
 y_multi <- data.frame(
