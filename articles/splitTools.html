@@ -77,10 +77,7 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Using ‘splitTools’</h1>
-                        <h4 data-toc-skip class="author">Michael
-Mayer</h4>
             
-            <h4 data-toc-skip class="date">2023-05-03</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/mayer79/splitTools/blob/HEAD/vignettes/splitTools.Rmd" class="external-link"><code>vignettes/splitTools.Rmd</code></a></small>
       <div class="hidden name"><code>splitTools.Rmd</code></div>
@@ -90,7 +87,7 @@ Mayer</h4>
     
     
 <div class="section level2">
-<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
 <p>{splitTools} is a fast, lightweight toolkit for data splitting.</p>
 <p>Its two main functions <code><a href="../reference/partition.html">partition()</a></code> and
@@ -98,10 +95,11 @@ Mayer</h4>
 <ul>
 <li><p>data partitioning (e.g. into training, validation and
 test),</p></li>
-<li><p>creating folds for cross-validation (CV),</p></li>
+<li><p>creating (in- or out-of-sample) folds for cross-validation
+(CV),</p></li>
 <li><p>creating <em>repeated</em> folds for CV,</p></li>
-<li><p>stratified splitting (e.g. for stratified CV),</p></li>
-<li><p>grouped splitting (e.g. for group-k-fold CV) as well as</p></li>
+<li><p>stratified splitting,</p></li>
+<li><p>grouped splitting as well as</p></li>
 <li><p>blocked splitting (if the sequential order of the data should be
 retained).</p></li>
 </ul>
@@ -112,23 +110,25 @@ data.</p>
 workflow.</p>
 </div>
 <div class="section level2">
-<h2 id="data-partitioning">Data partitioning<a class="anchor" aria-label="anchor" href="#data-partitioning"></a>
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
+<div class="section level3">
+<h3 id="simple-validation">Simple validation<a class="anchor" aria-label="anchor" href="#simple-validation"></a>
+</h3>
 <p>We will go through the following steps:</p>
 <ol style="list-style-type: decimal">
-<li><p>We split the <code>iris</code> data into 60% training, 20%
+<li>We split the <code>iris</code> data into 60% training, 20%
 validation, and 20% test data, stratified by the variable
 <code>Sepal.Length</code>. Since this variable is numeric,
-stratification uses quantile binning.</p></li>
-<li><p>Based on the validation performance, we tune the parameter
-<code>mtry</code> of a random forest with response
-<code>Sepal.Length</code>.</p></li>
-<li><p>After selecting the best <code>mtry</code>, we evaluate the final
-model on the test data.</p></li>
+stratification uses quantile binning.</li>
+<li>We will model the response <code>Sepal.Length</code> with a linear
+regression, once with and once without interaction between
+<code>Species</code> and <code>Sepal.Width</code>.</li>
+<li>After selecting the better of the two models via validation RMSE, we
+evaluate the final model on the test data.</li>
 </ol>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mayer79/splitTools" class="external-link">splitTools</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/imbs-hl/ranger" class="external-link">ranger</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Split data into partitions</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">3451</span><span class="op">)</span></span>
@@ -143,262 +143,108 @@ model on the test data.</p></li>
 <span><span class="va">valid</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">[</span><span class="va">inds</span><span class="op">$</span><span class="va">valid</span>, <span class="op">]</span></span>
 <span><span class="va">test</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">[</span><span class="va">inds</span><span class="op">$</span><span class="va">test</span>, <span class="op">]</span></span>
 <span></span>
-<span><span class="co"># Root-mean-squared error function used to evaluate results</span></span>
 <span><span class="va">rmse</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">y</span>, <span class="va">pred</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">y</span> <span class="op">-</span> <span class="va">pred</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="co"># Tune mtry on validation data</span></span>
-<span><span class="va">valid_mtry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">train</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co"># Use simple validation to decide on interaction yes/no...</span></span>
+<span><span class="va">fit1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">train</span><span class="op">)</span></span>
+<span><span class="va">fit2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span> <span class="op">+</span> <span class="va">Species</span><span class="op">:</span><span class="va">Sepal.Width</span>, data <span class="op">=</span> <span class="va">train</span><span class="op">)</span></span>
 <span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">valid_mtry</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">train</span>, mtry <span class="op">=</span> <span class="va">i</span><span class="op">)</span></span>
-<span>  <span class="va">valid_mtry</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">rmse</span><span class="op">(</span><span class="va">valid</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, <span class="va">valid</span><span class="op">)</span><span class="op">$</span><span class="va">predictions</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
+<span><span class="fu">rmse</span><span class="op">(</span><span class="va">valid</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit1</span>, <span class="va">valid</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.3020855</span></span>
+<span><span class="fu">rmse</span><span class="op">(</span><span class="va">valid</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit2</span>, <span class="va">valid</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.2954321</span></span>
 <span></span>
-<span><span class="va">valid_mtry</span></span>
-<span><span class="co">#&gt; [1] 0.3809234 0.3242173 0.3208119 0.3241518</span></span>
-<span><span class="op">(</span><span class="va">best_mtry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.min.html" class="external-link">which.min</a></span><span class="op">(</span><span class="va">valid_mtry</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 3</span></span>
-<span></span>
-<span><span class="co"># Fit and test final model</span></span>
-<span><span class="va">final_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">train</span>, mtry <span class="op">=</span> <span class="va">best_mtry</span><span class="op">)</span></span>
-<span><span class="fu">rmse</span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">final_fit</span>, <span class="va">test</span><span class="op">)</span><span class="op">$</span><span class="va">predictions</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.3480947</span></span></code></pre></div>
+<span><span class="co"># Yes! Choose and test final model</span></span>
+<span><span class="fu">rmse</span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit2</span>, <span class="va">test</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.3482849</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="cv">CV<a class="anchor" aria-label="anchor" href="#cv"></a>
-</h2>
+<div class="section level3">
+<h3 id="cv">CV<a class="anchor" aria-label="anchor" href="#cv"></a>
+</h3>
 <p>Since the <code>iris</code> data consists of only 150 rows, investing
-20% of observations for validation seems like a waste of resources, and
-the performance estimates might not be very robust. So let’s replace
-simple validation by five-fold CV, again using stratification on the
-response variable.</p>
+20% of observations for validation seems like a waste of resources.
+Furthermore, the performance estimates might not be very robust. Let’s
+replace simple validation by five-fold CV, again using stratification on
+the response variable.</p>
 <ol style="list-style-type: decimal">
-<li><p>Split <code>iris</code> into 80% training data and 20% test,
-stratified by the variable <code>Sepal.Length</code>.</p></li>
-<li><p>Use stratified five-fold CV to tune the parameter
-<code>mtry</code>.</p></li>
-<li><p>After selecting the best <code>mtry</code> by this
-“GridSearchCV”, we evaluate the final model on the test data.</p></li>
+<li>Split <code>iris</code> into 80% training data and 20% test,
+stratified by the variable <code>Sepal.Length</code>.</li>
+<li>Use stratified five-fold CV to choose between the two models.</li>
+<li>We evaluate the final model on the test data.</li>
 </ol>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Split into training and test</span></span>
-<span><span class="va">inds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/partition.html">partition</a></span><span class="op">(</span><span class="va">iris</span><span class="op">$</span><span class="va">Sepal.Length</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>train <span class="op">=</span> <span class="fl">0.8</span>, test <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">inds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/partition.html">partition</a></span><span class="op">(</span><span class="va">iris</span><span class="op">$</span><span class="va">Sepal.Length</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>train <span class="op">=</span> <span class="fl">0.8</span>, test <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span>, seed <span class="op">=</span> <span class="fl">87</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">train</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">[</span><span class="va">inds</span><span class="op">$</span><span class="va">train</span>, <span class="op">]</span></span>
 <span><span class="va">test</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">[</span><span class="va">inds</span><span class="op">$</span><span class="va">test</span>, <span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Get stratified CV in-sample indices</span></span>
-<span><span class="va">folds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_folds.html">create_folds</a></span><span class="op">(</span><span class="va">train</span><span class="op">$</span><span class="va">Sepal.Length</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="va">folds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_folds.html">create_folds</a></span><span class="op">(</span><span class="va">train</span><span class="op">$</span><span class="va">Sepal.Length</span>, k <span class="op">=</span> <span class="fl">5</span>, seed <span class="op">=</span> <span class="fl">2734</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Tune mtry by GridSearchCV</span></span>
-<span><span class="va">valid_mtry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">train</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co"># Vectors with results per model and fold</span></span>
+<span><span class="va">cv_rmse1</span> <span class="op">&lt;-</span> <span class="va">cv_rmse2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span>
 <span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">valid_mtry</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">cv_mtry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">fold</span> <span class="kw">in</span> <span class="va">folds</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">train</span><span class="op">[</span><span class="va">fold</span>, <span class="op">]</span>, mtry <span class="op">=</span> <span class="va">i</span><span class="op">)</span></span>
-<span>    <span class="va">cv_mtry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>      <span class="va">cv_mtry</span>, </span>
-<span>      <span class="fu">rmse</span><span class="op">(</span><span class="va">train</span><span class="op">[</span><span class="op">-</span><span class="va">fold</span>, <span class="st">"Sepal.Length"</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, <span class="va">train</span><span class="op">[</span><span class="op">-</span><span class="va">fold</span>, <span class="op">]</span><span class="op">)</span><span class="op">$</span><span class="va">predictions</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span>  <span class="va">valid_mtry</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">cv_mtry</span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">folds</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">insample</span> <span class="op">&lt;-</span> <span class="va">train</span><span class="op">[</span><span class="va">folds</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span>, <span class="op">]</span></span>
+<span>  <span class="va">out</span> <span class="op">&lt;-</span> <span class="va">train</span><span class="op">[</span><span class="op">-</span><span class="va">folds</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span>, <span class="op">]</span></span>
+<span>  </span>
+<span>  <span class="va">fit1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">insample</span><span class="op">)</span></span>
+<span>  <span class="va">fit2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span> <span class="op">+</span> <span class="va">Species</span><span class="op">:</span><span class="va">Sepal.Width</span>, data <span class="op">=</span> <span class="va">insample</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">cv_rmse1</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">rmse</span><span class="op">(</span><span class="va">out</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit1</span>, <span class="va">out</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">cv_rmse2</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">rmse</span><span class="op">(</span><span class="va">out</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit2</span>, <span class="va">out</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="co"># Result of CV</span></span>
-<span><span class="va">valid_mtry</span></span>
-<span><span class="co">#&gt; [1] 0.3870915 0.3460605 0.3337763 0.3302831</span></span>
-<span><span class="op">(</span><span class="va">best_mtry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.min.html" class="external-link">which.min</a></span><span class="op">(</span><span class="va">valid_mtry</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 4</span></span>
+<span><span class="co"># CV-RMSE of model 1 -&gt; close winner</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">cv_rmse1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.330189</span></span>
 <span></span>
-<span><span class="co"># Use optimal mtry to make model</span></span>
-<span><span class="va">final_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">train</span>, mtry <span class="op">=</span> <span class="va">best_mtry</span><span class="op">)</span></span>
-<span><span class="fu">rmse</span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">final_fit</span>, <span class="va">test</span><span class="op">)</span><span class="op">$</span><span class="va">predictions</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.2970876</span></span></code></pre></div>
+<span><span class="co"># CV-RMSE of model 2</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">cv_rmse2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.3306455</span></span>
+<span></span>
+<span><span class="co"># Fit model 1 on full training data and evaluate on test data</span></span>
+<span><span class="va">final_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">train</span><span class="op">)</span></span>
+<span><span class="fu">rmse</span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">final_fit</span>, <span class="va">test</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.2892289</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="repeated-cv">Repeated CV<a class="anchor" aria-label="anchor" href="#repeated-cv"></a>
-</h2>
-<p>If feasible, <em>repeated</em> CV is recommended in order to reduce
-uncertainty in decisions. Otherwise, the process remains the same. When
-we use three repetitions in 5-fold CV, instead of getting five
-performance estimates, we get 15 such values.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># We start by making repeated, stratified CV folds</span></span>
-<span><span class="va">folds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_folds.html">create_folds</a></span><span class="op">(</span><span class="va">train</span><span class="op">$</span><span class="va">Sepal.Length</span>, k <span class="op">=</span> <span class="fl">5</span>, m_rep <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">folds</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 15</span></span>
-<span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">valid_mtry</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">cv_mtry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">fold</span> <span class="kw">in</span> <span class="va">folds</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">train</span><span class="op">[</span><span class="va">fold</span>, <span class="op">]</span>, mtry <span class="op">=</span> <span class="va">i</span><span class="op">)</span></span>
-<span>    <span class="va">cv_mtry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>      <span class="va">cv_mtry</span>, </span>
-<span>      <span class="fu">rmse</span><span class="op">(</span><span class="va">train</span><span class="op">[</span><span class="op">-</span><span class="va">fold</span>, <span class="st">"Sepal.Length"</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, <span class="va">train</span><span class="op">[</span><span class="op">-</span><span class="va">fold</span>, <span class="op">]</span><span class="op">)</span><span class="op">$</span><span class="va">predictions</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span>  <span class="va">valid_mtry</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">cv_mtry</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span></span>
-<span><span class="co"># Result of CV</span></span>
-<span><span class="va">valid_mtry</span></span>
-<span><span class="co">#&gt; [1] 0.3934294 0.3544207 0.3422013 0.3393454</span></span>
-<span><span class="op">(</span><span class="va">best_mtry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.min.html" class="external-link">which.min</a></span><span class="op">(</span><span class="va">valid_mtry</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 4</span></span>
-<span></span>
-<span><span class="co"># Use optimal mtry to make model</span></span>
-<span><span class="va">final_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">train</span>, mtry <span class="op">=</span> <span class="va">best_mtry</span><span class="op">)</span></span>
-<span><span class="fu">rmse</span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">final_fit</span>, <span class="va">test</span><span class="op">)</span><span class="op">$</span><span class="va">predictions</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.2937055</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="time-series-cv-and-block-partitioning">Time-series CV and block partitioning<a class="anchor" aria-label="anchor" href="#time-series-cv-and-block-partitioning"></a>
-</h2>
-<p>When modeling time series, usual CV destroys the sequential nature of
-the data. This can be avoided by the following modification of k-fold
-CV:</p>
-<p>The data is first split into <span class="math inline">\(k+1\)</span>
-blocks <span class="math inline">\(B_1, ..., B_{k+1}\)</span>, in
-sequential order. Depending of <code>type = "extending"</code> (default)
-or <code>type == "moving"</code>, the following data sets are used in
-CV:</p>
-<ul>
-<li><p>First fold: <span class="math inline">\(B_1\)</span> is used for
-training, <span class="math inline">\(B_2\)</span> for
-evaluation.</p></li>
-<li><p>Second fold: <span class="math inline">\(\{B_1, B_2\}\)</span>
-(type “extending”) or <span class="math inline">\(B_2\)</span> (type
-“moving”) are used for training, <span class="math inline">\(B_3\)</span> for evaluation.</p></li>
-<li><p>…</p></li>
-<li><p><span class="math inline">\(k\)</span>-th fold: Rows in <span class="math inline">\(\{B_1, ..., B_k\}\)</span> (“extending”) or <span class="math inline">\(B_{k}\)</span>(“moving”) are used for training,
-those in <span class="math inline">\(B_{k+1}\)</span> for
-evaluation.</p></li>
-</ul>
-<p>These schemata make sure that the evaluation data always follows the
-training data. Note that the training data grows over the whole process
-linearly with <code>type = "extending"</code>, whereas its length is
-approximately constant with <code>type = "moving"</code>.</p>
-<p>In order to have a final evaluation of the optimized model, typically
-an initial blocked split into sequential training and testing data is
-done.</p>
 <div class="section level3">
-<h3 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+<h3 id="repeated-cv">Repeated CV<a class="anchor" aria-label="anchor" href="#repeated-cv"></a>
 </h3>
-<p>We first create a time series and derive lagged features for
-training. Then, again, we optimize <code>mtry</code> of a random forest
-by time-series CV. We evaluate the optimized model on the last 10% of
-the time series.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Create data</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">452</span><span class="op">)</span></span>
-<span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">1000</span></span>
-<span><span class="va">t</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span>, length.out <span class="op">=</span> <span class="va">n</span><span class="op">)</span></span>
-<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">0.2</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">sin</a></span><span class="op">(</span><span class="va">t</span><span class="op">)</span> <span class="op">-</span> <span class="fl">0.1</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">cos</a></span><span class="op">(</span><span class="va">t</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.2</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">t</span>, pch <span class="op">=</span> <span class="st">"."</span>, cex <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="splitTools_files/figure-html/unnamed-chunk-5-1.png" width="672"></p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co"># Helper function</span></span>
-<span><span class="va">Lag</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">z</span>, <span class="va">k</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">z</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="va">k</span><span class="op">)</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="va">k</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span><span class="fu">Lag</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, k <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1]  2  3  4 NA</span></span>
+<p>If feasible, <em>repeated</em> CV is recommended in order to reduce
+uncertainty in decisions. Otherwise, the process remains the same.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Train/test split as before</span></span>
 <span></span>
-<span><span class="co"># Add lagged features</span></span>
-<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
-<span>  <span class="va">y</span>, </span>
-<span>  lag1 <span class="op">=</span> <span class="fu">Lag</span><span class="op">(</span><span class="va">y</span><span class="op">)</span>, </span>
-<span>  lag2 <span class="op">=</span> <span class="fu">Lag</span><span class="op">(</span><span class="va">y</span>, k <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, </span>
-<span>  lag3 <span class="op">=</span> <span class="fu">Lag</span><span class="op">(</span><span class="va">y</span>, k <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">dat</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/stats/complete.cases.html" class="external-link">complete.cases</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span>, <span class="op">]</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
-<span><span class="co">#&gt;              y         lag1         lag2        lag3</span></span>
-<span><span class="co">#&gt; 1 -0.085447174  0.075314649 -0.007841658  0.10081516</span></span>
-<span><span class="co">#&gt; 2  0.075314649 -0.007841658  0.100815165  0.09635395</span></span>
-<span><span class="co">#&gt; 3 -0.007841658  0.100815165  0.096353945 -0.06476294</span></span>
-<span><span class="co">#&gt; 4  0.100815165  0.096353945 -0.064762935  0.10474890</span></span>
-<span><span class="co">#&gt; 5  0.096353945 -0.064762935  0.104748904  0.07030228</span></span>
-<span><span class="co">#&gt; 6 -0.064762935  0.104748904  0.070302283  0.01085425</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
-<span><span class="co">#&gt;              y      lag1      lag2      lag3</span></span>
-<span><span class="co">#&gt; y    1.0000000 0.8789100 0.8858208 0.8840929</span></span>
-<span><span class="co">#&gt; lag1 0.8789100 1.0000000 0.8791226 0.8858995</span></span>
-<span><span class="co">#&gt; lag2 0.8858208 0.8791226 1.0000000 0.8791388</span></span>
-<span><span class="co">#&gt; lag3 0.8840929 0.8858995 0.8791388 1.0000000</span></span>
+<span><span class="co"># 15 folds instead of 5</span></span>
+<span><span class="va">folds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_folds.html">create_folds</a></span><span class="op">(</span><span class="va">train</span><span class="op">$</span><span class="va">Sepal.Length</span>, k <span class="op">=</span> <span class="fl">5</span>, seed <span class="op">=</span> <span class="fl">2734</span>, m_rep <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">cv_rmse1</span> <span class="op">&lt;-</span> <span class="va">cv_rmse2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">15</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Block partitioning</span></span>
-<span><span class="va">inds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/partition.html">partition</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">y</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>train <span class="op">=</span> <span class="fl">0.9</span>, test <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>, type <span class="op">=</span> <span class="st">"blocked"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">inds</span><span class="op">)</span></span>
-<span><span class="co">#&gt; List of 2</span></span>
-<span><span class="co">#&gt;  $ train: int [1:898] 1 2 3 4 5 6 7 8 9 10 ...</span></span>
-<span><span class="co">#&gt;  $ test : int [1:99] 899 900 901 902 903 904 905 906 907 908 ...</span></span>
-<span></span>
-<span><span class="va">train</span> <span class="op">&lt;-</span> <span class="va">dat</span><span class="op">[</span><span class="va">inds</span><span class="op">$</span><span class="va">train</span>, <span class="op">]</span></span>
-<span><span class="va">test</span> <span class="op">&lt;-</span> <span class="va">dat</span><span class="op">[</span><span class="va">inds</span><span class="op">$</span><span class="va">test</span>, <span class="op">]</span></span>
-<span></span>
-<span><span class="co"># Get time series folds</span></span>
-<span><span class="va">folds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_timefolds.html">create_timefolds</a></span><span class="op">(</span><span class="va">train</span><span class="op">$</span><span class="va">y</span>, k <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">folds</span><span class="op">)</span></span>
-<span><span class="co">#&gt; List of 5</span></span>
-<span><span class="co">#&gt;  $ Fold1:List of 2</span></span>
-<span><span class="co">#&gt;   ..$ insample : int [1:150] 1 2 3 4 5 6 7 8 9 10 ...</span></span>
-<span><span class="co">#&gt;   ..$ outsample: int [1:150] 151 152 153 154 155 156 157 158 159 160 ...</span></span>
-<span><span class="co">#&gt;  $ Fold2:List of 2</span></span>
-<span><span class="co">#&gt;   ..$ insample : int [1:300] 1 2 3 4 5 6 7 8 9 10 ...</span></span>
-<span><span class="co">#&gt;   ..$ outsample: int [1:150] 301 302 303 304 305 306 307 308 309 310 ...</span></span>
-<span><span class="co">#&gt;  $ Fold3:List of 2</span></span>
-<span><span class="co">#&gt;   ..$ insample : int [1:450] 1 2 3 4 5 6 7 8 9 10 ...</span></span>
-<span><span class="co">#&gt;   ..$ outsample: int [1:150] 451 452 453 454 455 456 457 458 459 460 ...</span></span>
-<span><span class="co">#&gt;  $ Fold4:List of 2</span></span>
-<span><span class="co">#&gt;   ..$ insample : int [1:600] 1 2 3 4 5 6 7 8 9 10 ...</span></span>
-<span><span class="co">#&gt;   ..$ outsample: int [1:150] 601 602 603 604 605 606 607 608 609 610 ...</span></span>
-<span><span class="co">#&gt;  $ Fold5:List of 2</span></span>
-<span><span class="co">#&gt;   ..$ insample : int [1:750] 1 2 3 4 5 6 7 8 9 10 ...</span></span>
-<span><span class="co">#&gt;   ..$ outsample: int [1:148] 751 752 753 754 755 756 757 758 759 760 ...</span></span>
-<span></span>
-<span><span class="co"># Tune mtry by GridSearchCV</span></span>
-<span><span class="va">valid_mtry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">train</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span>
-<span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">valid_mtry</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">cv_mtry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">fold</span> <span class="kw">in</span> <span class="va">folds</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">train</span><span class="op">[</span><span class="va">fold</span><span class="op">$</span><span class="va">insample</span>, <span class="op">]</span>, mtry <span class="op">=</span> <span class="va">i</span><span class="op">)</span></span>
-<span>    <span class="va">cv_mtry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>      <span class="va">cv_mtry</span>, </span>
-<span>      <span class="fu">rmse</span><span class="op">(</span><span class="va">train</span><span class="op">[</span><span class="va">fold</span><span class="op">$</span><span class="va">outsample</span>, <span class="st">"y"</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, <span class="va">train</span><span class="op">[</span><span class="va">fold</span><span class="op">$</span><span class="va">outsample</span>, <span class="op">]</span><span class="op">)</span><span class="op">$</span><span class="va">predictions</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
-<span>  <span class="va">valid_mtry</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">cv_mtry</span><span class="op">)</span></span>
+<span><span class="co"># Rest as before...</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">folds</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">insample</span> <span class="op">&lt;-</span> <span class="va">train</span><span class="op">[</span><span class="va">folds</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span>, <span class="op">]</span></span>
+<span>  <span class="va">out</span> <span class="op">&lt;-</span> <span class="va">train</span><span class="op">[</span><span class="op">-</span><span class="va">folds</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span>, <span class="op">]</span></span>
+<span>  </span>
+<span>  <span class="va">fit1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">insample</span><span class="op">)</span></span>
+<span>  <span class="va">fit2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span> <span class="op">+</span> <span class="va">Species</span><span class="op">:</span><span class="va">Sepal.Width</span>, data <span class="op">=</span> <span class="va">insample</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">cv_rmse1</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">rmse</span><span class="op">(</span><span class="va">out</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit1</span>, <span class="va">out</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">cv_rmse2</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">rmse</span><span class="op">(</span><span class="va">out</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit2</span>, <span class="va">out</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="co"># Result of CV</span></span>
-<span><span class="va">valid_mtry</span></span>
-<span><span class="co">#&gt; [1] 0.08227426 0.08188820 0.08230724</span></span>
-<span><span class="op">(</span><span class="va">best_mtry</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.min.html" class="external-link">which.min</a></span><span class="op">(</span><span class="va">valid_mtry</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 2</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">cv_rmse1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.3296087</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">cv_rmse2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.331373</span></span>
 <span></span>
-<span><span class="co"># Use optimal mtry to make model and evaluate on future test data</span></span>
-<span><span class="va">final_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">train</span>, mtry <span class="op">=</span> <span class="va">best_mtry</span><span class="op">)</span></span>
-<span><span class="va">test_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">final_fit</span>, <span class="va">test</span><span class="op">)</span><span class="op">$</span><span class="va">predictions</span></span>
-<span><span class="fu">rmse</span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">y</span>, <span class="va">test_pred</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.07184702</span></span>
-<span></span>
-<span><span class="co"># Plot</span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">y</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">dat</span><span class="op">$</span><span class="va">y</span>, pch <span class="op">=</span> <span class="st">"."</span>, cex <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">y</span><span class="op">)</span><span class="op">)</span>, <span class="va">test</span><span class="op">$</span><span class="va">y</span>, col <span class="op">=</span> <span class="st">"red"</span>, pch <span class="op">=</span> <span class="st">"."</span>, cex <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">x</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">y</span><span class="op">)</span><span class="op">)</span>, <span class="va">test_pred</span><span class="op">)</span></span></code></pre></div>
-<p><img src="splitTools_files/figure-html/unnamed-chunk-5-2.png" width="672"></p>
+<span><span class="co"># Refit and test as before</span></span></code></pre></div>
 </div>
-</div>
-<div class="section level2">
-<h2 id="stratification-on-multiple-columns">Stratification on multiple columns<a class="anchor" aria-label="anchor" href="#stratification-on-multiple-columns"></a>
-</h2>
+<div class="section level3">
+<h3 id="stratification-on-multiple-columns">Stratification on multiple columns<a class="anchor" aria-label="anchor" href="#stratification-on-multiple-columns"></a>
+</h3>
 <p>The function <code><a href="../reference/multi_strata.html">multi_strata()</a></code> creates a stratification
 factor from multiple columns that can then be passed to
 <code>create_folds(, type = "stratified")</code> or
@@ -416,7 +262,7 @@ We want to do a stratified train/valid/test split, aiming at being
 balanced regarding not only the response “Sepal.Width”, but also
 regarding the important predictor “Species”. In this case, we could use
 the following workflow:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">3451</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ir</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sepal.Length"</span>, <span class="st">"Species"</span><span class="op">)</span><span class="op">]</span></span>
@@ -453,6 +299,7 @@ the following workflow:</p>
 <span><span class="co">#&gt;  Mean   :5.807                  </span></span>
 <span><span class="co">#&gt;  3rd Qu.:6.475                  </span></span>
 <span><span class="co">#&gt;  Max.   :7.100</span></span></code></pre></div>
+</div>
 </div>
   </div>
 
