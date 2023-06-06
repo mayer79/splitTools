@@ -23,15 +23,10 @@ knitr::opts_chunk$set(
 Its two main functions `partition()` and `create_folds()` support
 
 - data partitioning (e.g. into training, validation and test),
-
 - creating (in- or out-of-sample) folds for cross-validation (CV),
-
 - creating *repeated* folds for CV,
-
 - stratified splitting, 
-
 - grouped splitting as well as
-
 - blocked splitting (if the sequential order of the data should be retained).
 
 The function `create_timefolds()` does time-series splitting in the sense that the out-of-sample data follows the in-sample data.

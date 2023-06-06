@@ -18,18 +18,13 @@
 Its two main functions `partition()` and `create_folds()` support
 
 - data partitioning (e.g. into training, validation and test),
-
 - creating (in- or out-of-sample) folds for cross-validation (CV),
-
 - creating *repeated* folds for CV,
-
 - stratified splitting, 
-
 - grouped splitting as well as
-
 - blocked splitting (if the sequential order of the data should be retained).
 
-The function `create_timefolds` does time-series splitting where the out-of-sample data follows the (extending or moving) in-sample data.
+The function `create_timefolds()` does time-series splitting where the out-of-sample data follows the (extending or moving) in-sample data.
 
 The result of `create_folds()` can be directly passed to the `folds` argument in CV functions of XGBoost or LightGBM. Since these functions expect *out-of-sample* indices, set the option `invert = TRUE`.
 
@@ -101,4 +96,4 @@ str(inds <- create_timefolds(1:100, k = 5))
 # [...]
 ```
 
-For more details, check the vignette.
+For more details, check out the vignette.
