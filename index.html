@@ -96,14 +96,14 @@
 <p>{splitTools} is a toolkit for fast data splitting. It does not have any dependencies.</p>
 <p>Its two main functions <code><a href="reference/partition.html">partition()</a></code> and <code><a href="reference/create_folds.html">create_folds()</a></code> support</p>
 <ul>
-<li><p>data partitioning (e.g. into training, validation and test),</p></li>
-<li><p>creating (in- or out-of-sample) folds for cross-validation (CV),</p></li>
-<li><p>creating <em>repeated</em> folds for CV,</p></li>
-<li><p>stratified splitting,</p></li>
-<li><p>grouped splitting as well as</p></li>
-<li><p>blocked splitting (if the sequential order of the data should be retained).</p></li>
+<li>data partitioning (e.g. into training, validation and test),</li>
+<li>creating (in- or out-of-sample) folds for cross-validation (CV),</li>
+<li>creating <em>repeated</em> folds for CV,</li>
+<li>stratified splitting,</li>
+<li>grouped splitting as well as</li>
+<li>blocked splitting (if the sequential order of the data should be retained).</li>
 </ul>
-<p>The function <code>create_timefolds</code> does time-series splitting where the out-of-sample data follows the (extending or moving) in-sample data.</p>
+<p>The function <code><a href="reference/create_timefolds.html">create_timefolds()</a></code> does time-series splitting where the out-of-sample data follows the (extending or moving) in-sample data.</p>
 <p>The result of <code><a href="reference/create_folds.html">create_folds()</a></code> can be directly passed to the <code>folds</code> argument in CV functions of XGBoost or LightGBM. Since these functions expect <em>out-of-sample</em> indices, set the option <code>invert = TRUE</code>.</p>
 </div>
 <div class="section level2">
@@ -173,7 +173,7 @@
 <span><span class="co">#  ..$ outsample: int [1:17] 35 36 37 38 39 40 41 42 43 44 ...</span></span>
 <span><span class="co"># $ Fold3:List of 2</span></span>
 <span><span class="co"># [...]</span></span></code></pre></div>
-<p>For more details, check the vignette.</p>
+<p>For more details, check out the vignette.</p>
 </div>
 </div>
   </div>
