@@ -4,7 +4,7 @@
 
 [![CRAN status](http://www.r-pkg.org/badges/version/splitTools)](https://cran.r-project.org/package=splitTools)
 [![R-CMD-check](https://github.com/mayer79/splitTools/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mayer79/splitTools/actions)
-[![Codecov test coverage](https://codecov.io/gh/mayer79/splitTools/branch/main/graph/badge.svg)](https://app.codecov.io/gh/mayer79/splitTools?branch=main)
+[![Codecov test coverage](https://codecov.io/gh/mayer79/splitTools/graph/badge.svg)](https://app.codecov.io/gh/mayer79/splitTools?branch=main)
 
 [![](https://cranlogs.r-pkg.org/badges/splitTools)](https://cran.r-project.org/package=splitTools) 
 [![](https://cranlogs.r-pkg.org/badges/grand-total/splitTools?color=orange)](https://cran.r-project.org/package=splitTools)
