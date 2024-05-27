@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -127,7 +127,7 @@ regression, once with and once without interaction between
 evaluate the final model on the test data.</li>
 </ol>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mayer79/splitTools" class="external-link">splitTools</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mayer79.github.io/splitTools/" class="external-link">splitTools</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Split data into partitions</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">3451</span><span class="op">)</span></span>
@@ -136,8 +136,9 @@ evaluate the final model on the test data.</li>
 <span><span class="co">#&gt; List of 3</span></span>
 <span><span class="co">#&gt;  $ train: int [1:81] 2 3 6 7 8 10 11 18 19 20 ...</span></span>
 <span><span class="co">#&gt;  $ valid: int [1:34] 1 12 14 15 27 34 36 38 42 48 ...</span></span>
-<span><span class="co">#&gt;  $ test : int [1:35] 4 5 9 13 16 17 25 39 41 45 ...</span></span>
-<span></span>
+<span><span class="co">#&gt;  $ test : int [1:35] 4 5 9 13 16 17 25 39 41 45 ...</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="va">train</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">[</span><span class="va">inds</span><span class="op">$</span><span class="va">train</span>, <span class="op">]</span></span>
 <span><span class="va">valid</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">[</span><span class="va">inds</span><span class="op">$</span><span class="va">valid</span>, <span class="op">]</span></span>
 <span><span class="va">test</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">[</span><span class="va">inds</span><span class="op">$</span><span class="va">test</span>, <span class="op">]</span></span>
@@ -151,10 +152,12 @@ evaluate the final model on the test data.</li>
 <span><span class="va">fit2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span> <span class="op">+</span> <span class="va">Species</span><span class="op">:</span><span class="va">Sepal.Width</span>, data <span class="op">=</span> <span class="va">train</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">rmse</span><span class="op">(</span><span class="va">valid</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit1</span>, <span class="va">valid</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.3020855</span></span>
-<span><span class="fu">rmse</span><span class="op">(</span><span class="va">valid</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit2</span>, <span class="va">valid</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.2954321</span></span>
-<span></span>
+<span><span class="co">#&gt; [1] 0.3020855</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">rmse</span><span class="op">(</span><span class="va">valid</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit2</span>, <span class="va">valid</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.2954321</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># Yes! Choose and test final model</span></span>
 <span><span class="fu">rmse</span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit2</span>, <span class="va">test</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.3482849</span></span></code></pre></div>
@@ -173,7 +176,7 @@ stratified by the variable <code>Sepal.Length</code>.</li>
 <li>Use stratified five-fold CV to choose between the two models.</li>
 <li>We evaluate the final model on the test data.</li>
 </ol>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Split into training and test</span></span>
 <span><span class="va">inds</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/partition.html">partition</a></span><span class="op">(</span><span class="va">iris</span><span class="op">$</span><span class="va">Sepal.Length</span>, p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>train <span class="op">=</span> <span class="fl">0.8</span>, test <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span>, seed <span class="op">=</span> <span class="fl">87</span><span class="op">)</span></span>
 <span></span>
@@ -199,12 +202,14 @@ stratified by the variable <code>Sepal.Length</code>.</li>
 <span></span>
 <span><span class="co"># CV-RMSE of model 1 -&gt; close winner</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">cv_rmse1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.330189</span></span>
-<span></span>
+<span><span class="co">#&gt; [1] 0.330189</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># CV-RMSE of model 2</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">cv_rmse2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.3306455</span></span>
-<span></span>
+<span><span class="co">#&gt; [1] 0.3306455</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># Fit model 1 on full training data and evaluate on test data</span></span>
 <span><span class="va">final_fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">train</span><span class="op">)</span></span>
 <span><span class="fu">rmse</span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">final_fit</span>, <span class="va">test</span><span class="op">)</span><span class="op">)</span></span>
@@ -215,7 +220,7 @@ stratified by the variable <code>Sepal.Length</code>.</li>
 </h3>
 <p>If feasible, <em>repeated</em> CV is recommended in order to reduce
 uncertainty in decisions. Otherwise, the process remains the same.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Train/test split as before</span></span>
 <span></span>
 <span><span class="co"># 15 folds instead of 5</span></span>
@@ -235,10 +240,12 @@ uncertainty in decisions. Otherwise, the process remains the same.</p>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">cv_rmse1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.3296087</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">cv_rmse2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.331373</span></span>
-<span></span>
+<span><span class="co">#&gt; [1] 0.3296087</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">cv_rmse2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.331373</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># Refit and test as before</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -261,7 +268,7 @@ We want to do a stratified train/valid/test split, aiming at being
 balanced regarding not only the response “Sepal.Width”, but also
 regarding the important predictor “Species”. In this case, we could use
 the following workflow:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">3451</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ir</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sepal.Length"</span>, <span class="st">"Species"</span><span class="op">)</span><span class="op">]</span></span>
@@ -319,7 +326,7 @@ the following workflow:</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
 </div>
 
       </footer>
