@@ -133,3 +133,15 @@ test_that("tiny data sets are providing non-empty folds for basic sampling", {
   expect_message(create_folds(y, k = 3, seed = 4, type = "basic"))
 })
 
+test_that("fold_info works", {
+  y <- 1:10
+  k <- 3
+  res <- create_folds(y, k = k, seed = 1, fold_info = TRUE)
+  expect_equal(attr(res, "fold"), as.numeric(substring(names(res), 5)))
+  expect_equal(attr(res, "repeat"), rep(1, k))
+
+  # With repeats
+  res <- create_folds(y, k = k, seed = 1, m_rep = 5, fold_info = TRUE)
+  expect_equal(attr(res, "fold"), as.numeric(substring(names(res), 5, 6)))
+  expect_equal(attr(res, "repeat"), as.numeric(substring(names(res), 10, 11)))
+})
