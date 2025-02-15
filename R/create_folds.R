@@ -21,6 +21,8 @@
 #'   Default is `FALSE`, i.e., in-sample indices are returned.
 #' @param shuffle Should row indices be randomly shuffled within folds?
 #'   Default is `FALSE`.
+#' @param fold_info Set to `TRUE` to add attributes "fold" and "repeat"
+#'   with fold/repetition indices to the output list. Default is `FALSE`.
 #' @returns If `invert = FALSE` (the default), a list with in-sample row indices.
 #'   If `invert = TRUE`, a list with out-of-sample indices.
 #' @export
@@ -31,10 +33,18 @@
 #' create_folds(y, k = 2, m_rep = 2)
 #' create_folds(y, k = 3, type = "blocked")
 #' @seealso [partition()], [create_timefolds()]
-create_folds <- function(y, k = 5L,
-                         type = c("stratified", "basic", "grouped", "blocked"),
-                         n_bins = 10L, m_rep = 1L, use_names = TRUE,
-                         invert = FALSE, shuffle = FALSE, seed = NULL) {
+create_folds <- function(
+  y,
+  k = 5L,
+  type = c("stratified", "basic", "grouped", "blocked"),
+  n_bins = 10L,
+  m_rep = 1L,
+  use_names = TRUE,
+  invert = FALSE,
+  shuffle = FALSE,
+  seed = NULL,
+  fold_info = FALSE
+) {
   # Input checks
   type <- match.arg(type)
   stopifnot(
@@ -48,7 +58,6 @@ create_folds <- function(y, k = 5L,
     m_rep <- 1L
   }
 
-  # Initializations
   if (!is.null(seed)) {
     set.seed(seed)
   }
@@ -85,7 +94,14 @@ create_folds <- function(y, k = 5L,
   }
 
   # Call partition once or multiple times
-  if (m_rep == 1) f() else unlist(lapply(seq_len(m_rep), f), recursive = FALSE)
+  res <- if (m_rep == 1) f() else unlist(lapply(seq_len(m_rep), f), recursive = FALSE)
+
+  if (fold_info) {
+    attr(res, "fold") <- rep(seq_len(k), times = m_rep)
+    attr(res, "repeat") <- rep(seq_len(m_rep), each = k)
+  }
+
+  return(res)
 }
 
 # Little helper(s)

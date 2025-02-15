@@ -1,3 +1,8 @@
+# splitTools 1.0.2
+
+- New argument `fold_info = FALSE` in `create_folds()` to return fold information as attributes
+  "fold" and "repeat", see [33](https://github.com/mayer79/splitTools/issues/33).
+
 # splitTools 1.0.1
 
 - Documentation update.

@@ -13,7 +13,8 @@ create_folds(
   use_names = TRUE,
   invert = FALSE,
   shuffle = FALSE,
-  seed = NULL
+  seed = NULL,
+  fold_info = FALSE
 )
 }
 \arguments{
@@ -40,6 +41,9 @@ Default is \code{FALSE}, i.e., in-sample indices are returned.}
 Default is \code{FALSE}.}
 
 \item{seed}{Integer random seed.}
+
+\item{fold_info}{Set to \code{TRUE} to add attributes "fold" and "repeat"
+with fold/repetition indices to the output list. Default is \code{FALSE}.}
 }
 \value{
 If \code{invert = FALSE} (the default), a list with in-sample row indices.
