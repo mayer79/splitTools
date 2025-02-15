@@ -1,6 +1,6 @@
 pandoc: 3.1.11
-pkgdown: 2.1.0
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   splitTools: splitTools.html
-last_built: 2024-08-09T13:16Z
+last_built: 2025-02-15T09:43Z

@@ -19,7 +19,7 @@ By default, in-sample indices are returned."><meta property="og:image" content="
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">splitTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.2</span>
       </span>
     </div>
 
@@ -69,7 +69,8 @@ By default, in-sample indices are returned.</p>
 <span>  use_names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  invert <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  shuffle <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  seed <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  fold_info <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -117,6 +118,11 @@ Default is <code>FALSE</code>.</p></dd>
 
 <dt id="arg-seed">seed<a class="anchor" aria-label="anchor" href="#arg-seed"></a></dt>
 <dd><p>Integer random seed.</p></dd>
+
+
+<dt id="arg-fold-info">fold_info<a class="anchor" aria-label="anchor" href="#arg-fold-info"></a></dt>
+<dd><p>Set to <code>TRUE</code> to add attributes "fold" and "repeat"
+with fold/repetition indices to the output list. Default is <code>FALSE</code>.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -202,7 +208,7 @@ indices at random, but rather keeps them in sequential groups.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
       </footer></div>
