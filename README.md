@@ -3,9 +3,8 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/mayer79/splitTools/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mayer79/splitTools/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/mayer79/splitTools/graph/badge.svg)](https://app.codecov.io/gh/mayer79/splitTools?branch=main)
+[![Codecov test coverage](https://codecov.io/gh/mayer79/splitTools/graph/badge.svg)](https://app.codecov.io/gh/mayer79/splitTools)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/splitTools)](https://cran.r-project.org/package=splitTools)
-
 [![](https://cranlogs.r-pkg.org/badges/splitTools)](https://cran.r-project.org/package=splitTools) 
 [![](https://cranlogs.r-pkg.org/badges/grand-total/splitTools?color=orange)](https://cran.r-project.org/package=splitTools)
 
